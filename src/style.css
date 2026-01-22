@@ -1,0 +1,28 @@
+/* Rectangle 1 */
+/* .rect-1 { */
+/* position: absolute; */
+/* width: 50px; */
+/* height: 118px; */
+/* left: 14px; */
+/* top: 21px; */
+/* background: linear-gradient(180deg, rgba(0, 109, 210, 0) 8.54%, #006DD2 76.26%); */
+/* } */
+
+
+.name {
+background: linear-gradient(0deg, #B28028 0%, #E4CD6E 43.27%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+text-fill-color: transparent;
+/* border: 0.2px solid #B47B11; */
+/* text-shadow: 0px 2px 9.9px rgba(0, 0, 0, 0.73); */
+}
+
+.stat {
+background: linear-gradient(180deg, #E5CE6E 42.79%, #B38123 100%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+text-fill-color: transparent;
+}
