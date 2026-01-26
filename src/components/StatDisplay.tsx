@@ -1,7 +1,7 @@
 import { Player } from "@/types/api";
 
 export default function StatDisplay({ player }: { player: Player }) {
-  if (player.type === "BATSMAN" && player.batsmanStats) {
+  if ((player.type === "BATSMAN" || player.type === "WICKET_KEEPER") && player.batsmanStats) {
     const s = player.batsmanStats;
     return (
       <div className="grid grid-cols-2 gap-1 stat text-xl font-semibold" >
@@ -37,6 +37,5 @@ export default function StatDisplay({ player }: { player: Player }) {
       </div>
     )
   }
-
   return <p className="text-gray-400 italic">No specific stats available.</p>;
 }

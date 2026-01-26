@@ -1,45 +1,64 @@
 "use client";
 import { useState, useMemo, useEffect } from "react";
-import { Player, PlayerType } from "@/types/api";
-import { fetchPlayers } from '@/utils/api'
-import StatDisplay from "@/components/StatDisplay";
+import { Player, PlayerType } from "@/types/api"; import { fetchPlayers } from '@/utils/api'
 import PlayerCard from "@/components/PlayerCard";
 import Bidder from "@/components/Bidder";
-
-// Mock data from your JSON
+import Bid from "@/components/Bid";
+import { PlayerSearch } from "@/components/PlayerSearch";
+import { ToastContainer } from "react-toastify";
 
 export default function PlayerGallery() {
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [filter, setFilter] = useState<PlayerType>("BATSMAN");
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentBid, setCurrentBid] = useState(0);
+
   useEffect(() => {
     fetchPlayers().then(data => {
       setPlayers(data);
+      setIsLoading(false);
     });
   }, []);
-  const [players, setPlayers] = useState<Player[]>([]); // State for players
-  const [filter, setFilter] = useState<PlayerType>("BATSMAN");
-  const [currentIndex, setCurrentIndex] = useState(0);
 
   const filteredPlayers = useMemo(() => {
     return players.filter(p => p.type === filter);
-  }, [filter]);
+  }, [filter, players]);
+
+  const currentPlayer = filteredPlayers[currentIndex];
+
+  useEffect(() => {
+    if (currentPlayer) {
+      setCurrentBid(currentPlayer.price);
+    }
+  }, [currentIndex, currentPlayer]);
 
   const handleFilterChange = (val: string) => {
     setFilter(val as PlayerType);
     setCurrentIndex(0);
   };
 
-  const currentPlayer = filteredPlayers[currentIndex];
+  const next = () => {
+    if (filteredPlayers.length > 0) {
+      setCurrentIndex((prev) => (prev + 1));
+    }
+  };
 
-  const next = () => setCurrentIndex((prev) => (prev + 1) % filteredPlayers.length);
-  const prev = () => setCurrentIndex((prev) => (prev - 1 + filteredPlayers.length) % filteredPlayers.length);
+  const prev = () => {
+    if (filteredPlayers.length > 0) {
+      setCurrentIndex((prev) => (prev - 1));
+    }
+  };
+
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <main className="flex flex-col items-center relative">
       <div className="flex flex-col items-center relative">
         <h1 className="text-3xl font-bold mb-6">IPL Auction</h1>
 
-        {/* Category Filter */}
         <div className="flex gap-4 mb-8">
-          {["BATSMAN", "BOWLER", "ALL_ROUNDER"].map((cat) => (
+          {["BATSMAN", "BOWLER", "ALL_ROUNDER", "WICKET_KEEPER"].map((cat) => (
             <button
               key={cat}
               onClick={() => handleFilterChange(cat)}
@@ -51,17 +70,34 @@ export default function PlayerGallery() {
           ))}
         </div>
       </div>
-      <div className="flex items-center space-x-30">
-        {/* Player Display Card */}
+      <PlayerSearch setFilter={setFilter} players={players} setCurrentIndex={setCurrentIndex} />
+      <div className="flex items-center justify-around w-full">
         {currentPlayer ? (
-          <PlayerCard player={currentPlayer} />
+          <>
+            <PlayerCard player={currentPlayer} />
+            <Bid currentBid={currentBid} setCurrentBid={setCurrentBid} />
+            <Bidder player={currentPlayer} finalBid={currentBid} />
+          </>
         ) : (
-          <p>No players found in this category.</p>
+          <PlayerCard player="EMPTY" />
         )}
-        <Bidder />
+
+        <div className="absolute -bottom-20 flex w-11/12 justify-between">
+          <button onClick={prev} className="bg-yellow-600 p-3 rounded-sm cursor-pointer">Prev</button>
+          <button onClick={next} className="bg-yellow-600 p-3 rounded-sm cursor-pointer">Next</button>
+        </div>
       </div>
-
-
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </main>
   );
 }
