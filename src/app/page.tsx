@@ -53,7 +53,7 @@ export default function PlayerGallery() {
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <main className="flex flex-col items-center relative">
+    <main className="flex flex-col items-center relative bg-blue-900 h-dvh text-white text-nowrap">
       <div className="flex flex-col items-center relative">
         <h1 className="text-3xl font-bold mb-6">IPL Auction</h1>
 
@@ -82,7 +82,7 @@ export default function PlayerGallery() {
           <PlayerCard player="EMPTY" />
         )}
 
-        <div className="absolute -bottom-20 flex w-11/12 justify-between">
+        <div className="absolute bottom-10 flex w-11/12 justify-between">
           <button onClick={prev} className="bg-yellow-600 p-3 rounded-sm cursor-pointer">Prev</button>
           <button onClick={next} className="bg-yellow-600 p-3 rounded-sm cursor-pointer">Next</button>
         </div>

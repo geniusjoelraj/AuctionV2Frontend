@@ -46,3 +46,27 @@ export interface Player {
   order: number;
 }
 
+export type Transaction = {
+  "name": string;
+  "playerType": string;
+  "boughtFor": number;
+  "points": number;
+  "isForeign": boolean;
+  "isLegend": boolean;
+  "isUncapped": boolean;
+}
+
+export type TeamDetails = {
+  "id": number;
+  "gameId": number;
+  "name": string;
+  "association": string;
+  "balance": number;
+  "points": number;
+  "playerCount": number;
+  "allRounderCount": number;
+  "batsmanCount": number;
+  "bowlerCount": number;
+  "wicketKeeperCount": number;
+  "uncappedCount": number;
+}
