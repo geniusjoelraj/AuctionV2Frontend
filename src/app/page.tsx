@@ -75,7 +75,7 @@ export default function PlayerGallery() {
         {currentPlayer ? (
           <>
             <PlayerCard player={currentPlayer} />
-            <Bid currentBid={currentBid} setCurrentBid={setCurrentBid} />
+            <Bid />
             <Bidder player={currentPlayer} finalBid={currentBid} />
           </>
         ) : (
