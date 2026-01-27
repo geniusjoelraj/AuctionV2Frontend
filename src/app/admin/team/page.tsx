@@ -1,4 +1,3 @@
-import { DataTable } from "@/components/DataTable";
 import { TeamDetails } from "@/types/api";
 import { getALlTeamDetails } from "@/utils/api";
 

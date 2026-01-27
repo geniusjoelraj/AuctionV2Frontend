@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node ./wsocket/server.ts",
     "build": "next build",
-    "start": "next start",
+    "start": "next start && NODE_ENV=production node server.js",
     "lint": "eslint"
   },
   "dependencies": {
@@ -21,6 +21,8 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-toastify": "^11.0.5",
+    "socket.io": "^4.8.3",
+    "socket.io-client": "^4.8.3",
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {

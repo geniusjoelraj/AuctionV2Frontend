@@ -6,6 +6,7 @@ import Bidder from "@/components/Bidder";
 import Bid from "@/components/Bid";
 import { PlayerSearch } from "@/components/PlayerSearch";
 import { ToastContainer } from "react-toastify";
+import { socket } from "../socket";
 
 export default function PlayerGallery() {
   const [players, setPlayers] = useState<Player[]>([]);
@@ -13,7 +14,33 @@ export default function PlayerGallery() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [currentBid, setCurrentBid] = useState(0);
+  const [isConnected, setIsConnected] = useState(socket.connected);
+  const [transport, setTransport] = useState("N/A");
 
+  // WebSocket 
+  useEffect(() => {
+    function onConnect() {
+      setIsConnected(true);
+      setTransport(socket.io.engine.transport.name);
+
+      socket.io.engine.on("upgrade", (transport) => {
+        setTransport(transport.name);
+      });
+    }
+
+    function onDisconnect() {
+      setIsConnected(false);
+      setTransport("N/A");
+    }
+
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
+
+    return () => {
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+    };
+  }, []);
   useEffect(() => {
     fetchPlayers().then(data => {
       setPlayers(data);
@@ -56,6 +83,10 @@ export default function PlayerGallery() {
     <main className="flex flex-col items-center relative bg-blue-900 h-dvh text-white text-nowrap">
       <div className="flex flex-col items-center relative">
         <h1 className="text-3xl font-bold mb-6">IPL Auction</h1>
+        {/* <div> */}
+        {/*   <p>Status: {isConnected ? "connected" : "disconnected"}</p> */}
+        {/*   <p>Transport: {transport}</p> */}
+        {/* </div> */}
 
         <div className="flex gap-4 mb-8">
           {["BATSMAN", "BOWLER", "ALL_ROUNDER", "WICKET_KEEPER"].map((cat) => (
