@@ -1,25 +1,79 @@
-import { DataTable } from "@/components/DataTable";
-import { getTeamDetails } from "@/utils/api";
+'use client'
 
-export default async function TeamView() {
-  const teamDetails = await getTeamDetails('CSK')
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { teams } from '@/utils/constants'
+import { toast, ToastContainer } from 'react-toastify'
+
+function AuthUser(username: string, password: string) {
+  if (!teams.includes(username)) {
+    toast.error('Enter a proper team name')
+    return false
+  } else if (password !== '1234') {
+    toast.error('Incorrect password')
+    return false
+  }
+  return true
+}
+
+export default function LoginPage() {
+  const [teamSlug, setTeamSlug] = useState('')
+  const [password, setPassword] = useState('')
+  const router = useRouter()
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    const isAuthenticated = AuthUser(teamSlug, password)
+
+    if (isAuthenticated) {
+      router.push(`/team/${teamSlug}`)
+    }
+  }
+
   return (
-    <div className="p-10 ">
-      <DataTable team="CSK" />
-      <p className="text-center mt-10">Additional details</p>
-      <div className="grid grid-cols-2 gap-4 p-4 rounded-xl shadow-sm">
-        <div className="p-2 border-b">Balance: <span className="font-bold">₹{teamDetails.balance.toFixed(2)}</span></div>
-        <div className="p-2 border-b">Spent: <span className="font-bold">₹{(10000000 - teamDetails.balance).toFixed(2)}</span></div>
+    <div className="flex min-h-screen items-center justify-center">
+      <form onSubmit={handleLogin} className="w-full max-w-md space-y-4 p-8">
+        <h1 className="text-2xl font-bold">Enter Team</h1>
 
-        <div className="p-2 border-b">Total Points: <span className="font-bold">{teamDetails.points}</span></div>
-        <div className="p-2 border-b">All Rounders: <span className="font-bold">{teamDetails.allRounderCount}</span></div>
+        <Input
+          type="text"
+          placeholder="Team Name"
+          value={teamSlug}
+          onChange={(e) => setTeamSlug(e.target.value)}
+          required
+        />
+        <Input
+          type="password"
+          placeholder="passowrd"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
 
-        <div className="p-2 border-b">Batsman: <span className="font-bold">{teamDetails.batsmanCount}</span></div>
-        <div className="p-2 border-b">Bowler: <span className="font-bold">{teamDetails.bowlerCount}</span></div>
 
-        <div className="p-2">Wicket Keeper: <span className="font-bold">{teamDetails.wicketKeeperCount}</span></div>
-        <div className="p-2">Player Count: <span className="font-bold">{teamDetails.playerCount}</span></div>
-      </div>
+        {/* Add other fields like password, etc. */}
+
+        <Button
+          type="submit"
+          className="w-full "
+        >
+          View
+        </Button>
+      </form>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   )
 }

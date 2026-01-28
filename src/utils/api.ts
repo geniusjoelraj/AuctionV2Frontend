@@ -1,7 +1,7 @@
 import { Player, TeamDetails, Transaction } from '@/types/api'
 import { toast } from 'react-toastify';
 
-const BASE_URL = 'http://192.168.29.250:6769';
+const BASE_URL = 'http://localhost:6769';
 
 export const fetchPlayers = async (): Promise<Player[]> => {
   try {
