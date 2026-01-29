@@ -18,6 +18,7 @@ import { Event } from "@/socket"
 export function DataTable({ players, teamDetails, teamName }: { players: Array<Transaction>, teamDetails: TeamDetails, teamName: string }) {
   const [playersData, setPlayersData] = useState<Transaction[]>(players)
   const [team, setTeams] = useState(teamDetails)
+  const [bid, setBid] = useState(0)
 
   useEffect(() => {
     const disconnect = Event(
@@ -29,7 +30,16 @@ export function DataTable({ players, teamDetails, teamName }: { players: Array<T
       (refund: string) => {
         const parsed = JSON.parse(refund);
         setPlayersData(prev => prev.filter((p) => p.name !== parsed?.payload.playerName));
+      },
+      (teams: string) => {
+        const parsed = JSON.parse(teams);
+        setTeams(parsed?.payload);
+      },
+      (bids: string) => {
+        const parsed = JSON.parse(bids);
+        setBid(parsed?.payload.currentBid);
       }
+
     );
 
     return () => {
@@ -39,6 +49,7 @@ export function DataTable({ players, teamDetails, teamName }: { players: Array<T
 
   return (
     <>
+      <div className="">Current Bid: {bid}</div>
       <Table>
         <TableCaption>The list of players you have purchased</TableCaption>
         <TableHeader>
