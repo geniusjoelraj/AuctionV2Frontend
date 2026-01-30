@@ -6,13 +6,19 @@ import Bidder from "@/components/Bidder";
 import Bid from "@/components/Bid";
 import { PlayerSearch } from "@/components/PlayerSearch";
 import { ToastContainer } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 export default function PlayerGallery() {
   const [players, setPlayers] = useState<Player[]>([]);
   const [filter, setFilter] = useState<PlayerType>("BATSMAN");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-
+  const router = useRouter()
+  useEffect(() => {
+    if (localStorage.getItem('team') !== 'admin') {
+      router.push('/team/view')
+    }
+  })
   useEffect(() => {
     const id = parseInt(localStorage.getItem('game')!)
     if (id) {

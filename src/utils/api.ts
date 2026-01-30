@@ -1,4 +1,4 @@
-import { Player, TeamDetails, Transaction } from '@/types/api'
+import { Game, NewGame, Player, TeamDetails, Transaction } from '@/types/api'
 import { toast } from 'react-toastify';
 
 const HOST = process.env.NEXT_PUBLIC_HOST || "localhost"
@@ -128,5 +128,39 @@ export const refundPlayer = async (playerId: number, gameId: number) => {
     console.error("Failed to purchase player", err);
     toast.error("Network error: Could not reach server");
     throw err;
+  }
+}
+
+export const getGames = async () => {
+  try {
+    const response = await fetch(`${BASE_URL}/game`)
+    const games: Game[] = await response.json()
+    return games
+  } catch (err) {
+    console.log("Failed to get games", err);
+    throw err
+  }
+}
+
+export const createGame = async (newgame: NewGame) => {
+  try {
+    const response = await fetch(`${BASE_URL}/game`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newgame)
+    })
+    if (response.ok) {
+      const result = await response.json();
+      toast.success(result.message || "Game created successfully");
+    } else {
+      const errorData = await response.json();
+      toast.error(errorData.message || "Failed to create game");
+    }
+
+  } catch (err) {
+    console.log("Failed to get games", err);
+    throw err
   }
 }

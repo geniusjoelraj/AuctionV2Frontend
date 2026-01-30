@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge"
 import { TeamDetails, Transaction } from "@/types/api"
 import { useEffect, useState } from "react"
 import { socketService } from "@/socket"
+import { formatNumber } from "@/utils/bid"
 
 
 export function DataTable({ players, teamDetails, teamName }: { players: Array<Transaction>, teamDetails: TeamDetails, teamName: string }) {
@@ -20,10 +21,9 @@ export function DataTable({ players, teamDetails, teamName }: { players: Array<T
   const [team, setTeams] = useState(teamDetails)
   const [bid, setBid] = useState(0)
 
+
   useEffect(() => {
     socketService.connect(() => {
-
-
       const gameId = parseInt(localStorage.getItem('game')!);
       const subPurchase = socketService.subscribe(
         `/topic/game/${gameId}/purchases/${teamName}`,
@@ -78,7 +78,7 @@ export function DataTable({ players, teamDetails, teamName }: { players: Array<T
                 {player.isForeign && <Badge variant="secondary">foreign</Badge>}
               </TableCell>
               <TableCell>{player.points}</TableCell>
-              <TableCell className="text-right">{player.boughtFor}</TableCell>
+              <TableCell className="text-right">{formatNumber(player.boughtFor)}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -86,14 +86,14 @@ export function DataTable({ players, teamDetails, teamName }: { players: Array<T
           <TableRow>
             <TableCell colSpan={3}>Total</TableCell>
             <TableCell>{playersData.reduce((acc, curr) => acc + curr.points, 0)}</TableCell>
-            <TableCell className="text-right">{playersData.reduce((acc, curr) => acc + curr.boughtFor, 0)}</TableCell>
+            <TableCell className="text-right">{formatNumber(playersData.reduce((acc, curr) => acc + curr.boughtFor, 0))}</TableCell>
           </TableRow>
         </TableFooter>
       </Table>
       <p className="text-center mt-10">Additional details</p>
       <div className="grid grid-cols-2 gap-4 p-4 rounded-xl shadow-sm">
-        <div className="p-2 border-b">Balance: <span className="font-bold">₹{team.balance.toFixed(2)}</span></div>
-        <div className="p-2 border-b">Spent: <span className="font-bold">₹{(10000000 - team.balance).toFixed(2)}</span></div>
+        <div className="p-2 border-b">Balance: <span className="font-bold">₹{formatNumber(team.balance)}</span></div>
+        <div className="p-2 border-b">Spent: <span className="font-bold">₹{formatNumber(100000000 - team.balance)}</span></div>
 
         <div className="p-2 border-b">Total Points: <span className="font-bold">{team.points}</span></div>
         <div className="p-2 border-b">All Rounders: <span className="font-bold">{team.allRounderCount}</span></div>

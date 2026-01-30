@@ -70,3 +70,21 @@ export type TeamDetails = {
   "wicketKeeperCount": number;
   "uncappedCount": number;
 }
+
+export type NewGame = {
+  "setId": number;
+  "name": string;
+  "initialBalance": number;
+  "playersPerTeam": number;
+  "batsmenPerTeam": number;
+  "bowlersPerTeam": number;
+  "allRounderPerTeam": number;
+  "wicketKeeperPerTeam": number;
+  "unCappedPerTeam": number;
+}
+
+export type Game = NewGame &
+{
+  "status": "ACTIVE" | "INACTIVE",
+  id: number
+}

@@ -6,12 +6,24 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { teams } from '@/utils/constants'
 import { toast, ToastContainer } from 'react-toastify'
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 
-function AuthUser(username: string, password: string) {
+function AuthUser(username: string, password: string, router: AppRouterInstance) {
+  if (username === 'admin') {
+    if (password !== 'password') {
+      toast.error('Incorrect password')
+      return false
+    }
+
+    localStorage.setItem('teamName', 'admin')
+    router.push('/')
+    return true
+  }
   if (!teams.includes(username)) {
     toast.error('Enter a proper team name')
     return false
-  } else if (password !== '1234') {
+  }
+  if (password !== '1234') {
     toast.error('Incorrect password')
     return false
   }
@@ -20,15 +32,15 @@ function AuthUser(username: string, password: string) {
 
 export default function LoginPage() {
   const [teamSlug, setTeamSlug] = useState('')
+  const [roomId, setRoomId] = useState('')
   const [password, setPassword] = useState('')
   const router = useRouter()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-
-    const isAuthenticated = AuthUser(teamSlug, password)
-
-    if (isAuthenticated) {
+    const isAuthenticated = AuthUser(teamSlug, password, router)
+    localStorage.setItem('game', roomId)
+    if (isAuthenticated && teamSlug !== 'admin') {
       localStorage.setItem('teamName', teamSlug)
       router.push(`/team/view`)
     }
@@ -44,6 +56,13 @@ export default function LoginPage() {
           placeholder="Team Name"
           value={teamSlug}
           onChange={(e) => setTeamSlug(e.target.value)}
+          required
+        />
+        <Input
+          type="text"
+          placeholder="Room Id"
+          value={roomId}
+          onChange={(e) => setRoomId(e.target.value)}
           required
         />
         <Input
