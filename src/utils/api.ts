@@ -1,7 +1,7 @@
 import { Player, TeamDetails, Transaction } from '@/types/api'
 import { toast } from 'react-toastify';
 
-const HOST = process.env.NEXT_PUBLIC_HOST
+const HOST = process.env.NEXT_PUBLIC_HOST || "localhost"
 const BASE_URL = `http://${HOST}:6769`;
 
 export const fetchPlayers = async (gameId: number): Promise<Player[]> => {

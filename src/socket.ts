@@ -1,7 +1,7 @@
 import { Client, IFrame, StompSubscription } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
-const HOST = process.env.NEXT_PUBLIC_HOST;
+const HOST = process.env.NEXT_PUBLIC_HOST || "localhost"
 const SOCKET_URL = `http://${HOST}:6769/ws`;
 
 type ConnectionStatus = 'disconnected' | 'connecting' | 'connected';
