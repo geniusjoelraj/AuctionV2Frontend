@@ -29,7 +29,8 @@ export default function LoginPage() {
     const isAuthenticated = AuthUser(teamSlug, password)
 
     if (isAuthenticated) {
-      router.push(`/team/${teamSlug}`)
+      localStorage.setItem('teamName', teamSlug)
+      router.push(`/team/view`)
     }
   }
 

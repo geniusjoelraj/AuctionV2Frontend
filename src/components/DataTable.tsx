@@ -12,7 +12,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { TeamDetails, Transaction } from "@/types/api"
 import { useEffect, useState } from "react"
-import { Event } from "@/socket"
+import { socketService } from "@/socket"
 
 
 export function DataTable({ players, teamDetails, teamName }: { players: Array<Transaction>, teamDetails: TeamDetails, teamName: string }) {
@@ -21,30 +21,37 @@ export function DataTable({ players, teamDetails, teamName }: { players: Array<T
   const [bid, setBid] = useState(0)
 
   useEffect(() => {
-    const disconnect = Event(
-      teamName,
-      (purchase: string) => {
-        const parsed = JSON.parse(purchase);
-        setPlayersData(prev => [...prev, parsed?.payload]);
-      },
-      (refund: string) => {
-        const parsed = JSON.parse(refund);
-        setPlayersData(prev => prev.filter((p) => p.name !== parsed?.payload.playerName));
-      },
-      (teams: string) => {
-        const parsed = JSON.parse(teams);
-        setTeams(parsed?.payload);
-      },
-      (bids: string) => {
-        const parsed = JSON.parse(bids);
-        setBid(parsed?.payload.currentBid);
-      }
+    socketService.connect(() => {
 
-    );
 
-    return () => {
-      if (disconnect) disconnect();
-    };
+      const gameId = parseInt(localStorage.getItem('game')!);
+      const subPurchase = socketService.subscribe(
+        `/topic/game/${gameId}/purchases/${teamName}`,
+        (data) => setPlayersData(prev => [...prev, data.payload])
+      );
+
+      const subRefund = socketService.subscribe(
+        `/topic/game/${gameId}/refunds/${teamName}`,
+        (data) => setPlayersData(prev => prev.filter((p) => p.name !== data.payload.playerName))
+      );
+
+      const subTeam = socketService.subscribe(
+        `/topic/game/${gameId}/team/${teamName}`,
+        (data) => setTeams(data.payload)
+      );
+
+      const subBids = socketService.subscribe(
+        `/topic/game/${gameId}/bids`,
+        (data) => setBid(data.payload.currentBid)
+      );
+
+      return () => {
+        subPurchase?.unsubscribe();
+        subRefund?.unsubscribe();
+        subTeam?.unsubscribe();
+        subBids?.unsubscribe();
+      };
+    });
   }, [teamName]);
 
   return (
@@ -56,14 +63,14 @@ export function DataTable({ players, teamDetails, teamName }: { players: Array<T
           <TableRow>
             <TableHead>Name</TableHead>
             <TableHead>Type</TableHead>
-            <TableHead>Capped</TableHead>
+            <TableHead>Tags</TableHead>
             <TableHead>Points</TableHead>
             <TableHead className="text-right">Price</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {playersData.map((player) => (
-            <TableRow key={player.name}>
+            <TableRow key={player.name} className={player.isForeign ? `bg-secondary` : ''}>
               <TableCell>{player.name}</TableCell>
               <TableCell>{player.playerType}</TableCell>
               <TableCell>

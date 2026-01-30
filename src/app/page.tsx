@@ -12,13 +12,15 @@ export default function PlayerGallery() {
   const [filter, setFilter] = useState<PlayerType>("BATSMAN");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentBid, setCurrentBid] = useState(0);
 
   useEffect(() => {
-    fetchPlayers().then(data => {
-      setPlayers(data);
-      setIsLoading(false);
-    });
+    const id = parseInt(localStorage.getItem('game')!)
+    if (id) {
+      fetchPlayers(id).then(data => {
+        setPlayers(data);
+        setIsLoading(false);
+      });
+    }
   }, []);
 
   const filteredPlayers = useMemo(() => {
@@ -27,6 +29,7 @@ export default function PlayerGallery() {
 
   const currentPlayer = filteredPlayers[currentIndex];
 
+  const [currentBid, setCurrentBid] = useState(currentPlayer?.price!);
   useEffect(() => {
     if (currentPlayer) {
       setCurrentBid(currentPlayer.price);
@@ -75,7 +78,7 @@ export default function PlayerGallery() {
         {currentPlayer ? (
           <>
             <PlayerCard player={currentPlayer} />
-            <Bid currentBid={currentBid} setCurrentBid={setCurrentBid} />
+            <Bid currentBid={currentBid ?? currentPlayer.price} setCurrentBid={setCurrentBid} />
             <Bidder player={currentPlayer} finalBid={currentBid} />
           </>
         ) : (

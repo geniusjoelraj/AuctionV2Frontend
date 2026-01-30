@@ -4,9 +4,9 @@ import { toast } from 'react-toastify';
 const HOST = process.env.NEXT_PUBLIC_HOST
 const BASE_URL = `http://${HOST}:6769`;
 
-export const fetchPlayers = async (): Promise<Player[]> => {
+export const fetchPlayers = async (gameId: number): Promise<Player[]> => {
   try {
-    const response = await fetch(`${BASE_URL}/game/1/players`);
+    const response = await fetch(`${BASE_URL}/game/${gameId}/players`);
     if (!response.ok) {
       throw new Error(`Error fetching players: ${response.statusText}`);
     }
@@ -18,9 +18,9 @@ export const fetchPlayers = async (): Promise<Player[]> => {
   }
 };
 
-export const fetchTeamPlayers = async (team: string): Promise<Transaction[]> => {
+export const fetchTeamPlayers = async (team: string, gameId: number): Promise<Transaction[]> => {
   try {
-    const response = await fetch(`${BASE_URL}/game/1/team/${team}/purchases`);
+    const response = await fetch(`${BASE_URL}/game/${gameId}/team/${team}/purchases`);
     if (!response.ok) {
       throw new Error(`Error fetching players: ${response.statusText}`);
     }
@@ -32,9 +32,9 @@ export const fetchTeamPlayers = async (team: string): Promise<Transaction[]> => 
   }
 };
 
-export const fetchAllTeamPlayers = async (): Promise<Transaction[]> => {
+export const fetchAllTeamPlayers = async (gameId: number): Promise<Transaction[]> => {
   try {
-    const response = await fetch(`${BASE_URL}/game/1/team/players`);
+    const response = await fetch(`${BASE_URL}/game/${gameId}/team/players`);
     if (!response.ok) {
       throw new Error(`Error fetching players: ${response.statusText}`);
     }
@@ -46,10 +46,9 @@ export const fetchAllTeamPlayers = async (): Promise<Transaction[]> => {
   }
 };
 
-export const purchasePlayer = async (team: string, id: number, finalBid: number) => {
-  const GAME_ID = 1;
+export const purchasePlayer = async (team: string, id: number, finalBid: number, gameId: number) => {
   try {
-    const response = await fetch(`${BASE_URL}/game/${GAME_ID}/purchase`, {
+    const response = await fetch(`${BASE_URL}/game/${gameId}/purchase`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -76,10 +75,9 @@ export const purchasePlayer = async (team: string, id: number, finalBid: number)
   }
 }
 
-export const getTeamDetails = async (team: string) => {
-  const GAME_ID = 1;
+export const getTeamDetails = async (team: string, gameId: number) => {
   try {
-    const response = await fetch(`${BASE_URL}/game/${GAME_ID}/team/${team.toLowerCase()}`);
+    const response = await fetch(`${BASE_URL}/game/${gameId}/team/${team.toLowerCase()}`);
     if (!response.ok) {
       throw new Error(`Error fetching team details: ${response.statusText}`);
     }
@@ -91,10 +89,9 @@ export const getTeamDetails = async (team: string) => {
   }
 }
 
-export const getALlTeamDetails = async () => {
-  const GAME_ID = 1;
+export const getALlTeamDetails = async (gameId: number) => {
   try {
-    const response = await fetch(`${BASE_URL}/game/${GAME_ID}/team`);
+    const response = await fetch(`${BASE_URL}/game/${gameId}/team`);
     if (!response.ok) {
       throw new Error(`Error fetching team details: ${response.statusText}`);
     }
@@ -107,10 +104,9 @@ export const getALlTeamDetails = async () => {
 }
 
 
-export const refundPlayer = async (playerId: number) => {
-  const GAME_ID = 1;
+export const refundPlayer = async (playerId: number, gameId: number) => {
   try {
-    const response = await fetch(`${BASE_URL}/game/${GAME_ID}/refund`, {
+    const response = await fetch(`${BASE_URL}/game/${gameId}/refund`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
