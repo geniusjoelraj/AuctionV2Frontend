@@ -36,7 +36,7 @@ export default function CustomIncrement({ bid, setCurrentBid }: { bid: number, s
       <DialogTrigger asChild>
         <Button variant="outline" ref={customBidRef} className="hidden">Custom</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-sm bg-[#674D63]">
+      <DialogContent className="sm:max-w-sm">
         <DialogHeader>
           <DialogTitle>Bid</DialogTitle>
         </DialogHeader>

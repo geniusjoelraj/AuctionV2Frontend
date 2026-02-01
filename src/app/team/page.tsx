@@ -7,8 +7,37 @@ import { Input } from '@/components/ui/input'
 import { teams } from '@/utils/constants'
 import { toast, ToastContainer } from 'react-toastify'
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
+import { getGames } from '@/utils/api'
+import { Game } from '@/types/api'
 
-function AuthUser(username: string, password: string, router: AppRouterInstance) {
+
+
+async function gameExists(gameId: string) {
+  try {
+    getGames().then((games: Game[]) => {
+      if (games) {
+        const gameIds = games.map((game) => game.id)
+        if (gameIds.includes(parseInt(gameId))) {
+          localStorage.setItem('game', gameId)
+          const game = games.find((game) => game.id === parseInt(gameId))
+          if (game?.status === 'INACTIVE') {
+            toast.error('Game not started yet')
+            return false
+          }
+        } else {
+          toast.error('No such game exits')
+          return false
+        }
+        return true
+      }
+      return false
+    })
+  } catch {
+    toast.error('No such game')
+    return false
+  }
+}
+function AuthUser(username: string, password: string, router: AppRouterInstance, gameId: string) {
   if (username === 'admin') {
     if (password !== 'password') {
       toast.error('Incorrect password')
@@ -27,6 +56,10 @@ function AuthUser(username: string, password: string, router: AppRouterInstance)
     toast.error('Incorrect password')
     return false
   }
+  if (!gameExists(gameId)) {
+    return false
+  }
+
   return true
 }
 
@@ -36,13 +69,67 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const router = useRouter()
 
+  async function gameExists(gameId: string): Promise<boolean> {
+    try {
+      const games: Game[] = await getGames()
+      if (!games) return false
+
+      const game = games.find((g) => g.id === parseInt(gameId))
+      if (!game) {
+        toast.error('No such game exists')
+        return false
+      }
+      if (game.status === 'INACTIVE') {
+        toast.error('Game not started yet')
+        return false
+      }
+
+      localStorage.setItem('game', gameId)
+      return true
+    } catch {
+      toast.error('No such game')
+      return false
+    }
+  }
+
+  async function AuthUser(
+    username: string,
+    password: string,
+    router: AppRouterInstance,
+    gameId: string
+  ): Promise<boolean> {
+    if (username === 'admin') {
+      if (password !== 'password') {
+        toast.error('Incorrect password')
+        return false
+      }
+      localStorage.setItem('teamName', 'admin')
+      router.push('/')
+      return true
+    }
+
+    if (!teams.includes(username)) {
+      toast.error('Enter a proper team name')
+      return false
+    }
+    if (password !== '1234') {
+      toast.error('Incorrect password')
+      return false
+    }
+
+    const valid = await gameExists(gameId)
+    if (!valid) return false
+
+    return true
+  }
+
+  // In handleLogin:
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    const isAuthenticated = AuthUser(teamSlug, password, router)
-    localStorage.setItem('game', roomId)
+    const isAuthenticated = await AuthUser(teamSlug, password, router, roomId)
     if (isAuthenticated && teamSlug !== 'admin') {
       localStorage.setItem('teamName', teamSlug)
-      router.push(`/team/view`)
+      router.push('/team/view')
     }
   }
 
@@ -74,13 +161,11 @@ export default function LoginPage() {
         />
 
 
-        {/* Add other fields like password, etc. */}
-
         <Button
           type="submit"
           className="w-full "
         >
-          View
+          Join
         </Button>
       </form>
       <ToastContainer

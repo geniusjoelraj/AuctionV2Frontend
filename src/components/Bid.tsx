@@ -34,7 +34,7 @@ export default function Bid({
     <div className="flex flex-col items-center w-72 justify-center">
       <h1 className="font-bold text-5xl mb-3">CURRENT BID</h1>
       <p className="font-black text-9xl">{formatNumber(currentBid)}</p>
-      <div className="flex justify-center items-center gap-4">
+      <div className="flex justify-center items-center gap-4 hidden">
         <button
           className="text-4xl rounded-xl p-4 py-3 bg-[#A94A55] font-bold hover:bg-[#DE4255]"
           onClick={() => handleSendBid(currentBid - 2500000)}

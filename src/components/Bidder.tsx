@@ -8,6 +8,7 @@ import { useHotkeys } from "react-hotkeys-hook";
 export default function Bidder({ player, finalBid }: { player: Player, finalBid: number }) {
   const [gameId, setGameId] = useState(0)
 
+  useHotkeys('r', () => refundPlayer(player.id, gameId))
   useEffect(() => {
     const id = parseInt(localStorage.getItem('game')!);
     setGameId(id)
@@ -18,7 +19,7 @@ export default function Bidder({ player, finalBid }: { player: Player, finalBid:
       {teams.map((team, ind) => (
         <button
           key={team}
-          className="glass-btn p-3 pl-1 text-xl font-semibold rounded-sm w-full"
+          className="glass-btn p-3 pl-1 text-xl font-semibold rounded-sm w-full py-5"
           onClick={() => purchasePlayer(team, player.id, finalBid, gameId)}
         >
           {/* <div className="absolute top-0 right-1 text-sm text-gray-50">{ind === 9 ? 0 : ind + 1}</div> */}
@@ -26,7 +27,7 @@ export default function Bidder({ player, finalBid }: { player: Player, finalBid:
           {team}
         </button>
       ))}
-      <button className="bg-red-500 p-2 rounded-md hover:bg-red-400 cursor-pointer col-span-2 text-center red-glass-btn" onClick={() => refundPlayer(player.id, gameId)}>refund</button>
+      <button className="bg-red-500 p-2 rounded-md hover:bg-red-400 cursor-pointer col-span-2 text-center red-glass-btn" onClick={() => refundPlayer(player.id, gameId)}>Refund</button>
     </div>
   )
 }

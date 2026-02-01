@@ -9,6 +9,7 @@ import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useHotkeys } from 'react-hotkeys-hook'
 import CustomIncrement from "@/components/CustomIncrement";
+import Shortcuts from "@/components/Shortcuts";
 
 export default function PlayerGallery() {
   const [players, setPlayers] = useState<Player[]>([]);
@@ -77,12 +78,10 @@ export default function PlayerGallery() {
   const handleFilterChange = (val: string) => {
     setFilter(val as PlayerType);
     setCurrentIndex(getIndexByFilter(val));
-    console.log(playerIndexes);
   };
 
   const next = () => {
     if (filteredPlayers.length > 0 && currentIndex < filteredPlayers.length - 1) {
-      console.log('filter:', filter, 'key:', filterToKey[filter], 'prev:', playerIndexes);
       setPlayerIndexes((prev) => ({
         ...prev,
         [filterToKey[filter]]: prev[filterToKey[filter]] + 1,
@@ -104,7 +103,7 @@ export default function PlayerGallery() {
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <main style={{ backgroundImage: "url('/ipl-stadium-bg.jpg')" }} className="flex flex-col items-center relative bg-blue-900 h-dvh text-white text-nowrap bg-cover bg-opacity-0 px-20">
+    <main style={{ backgroundImage: "url('/ipl-stadium-bg.png')" }} className="flex flex-col items-center relative bg-blue-900 h-dvh text-white text-nowrap bg-cover bg-opacity-0 px-20">
       <div className="flex flex-col items-center relative">
         <h1 className="text-4xl font-bold mb-6"><img src="/srm-ipl.png" alt="IPL" width={100} className="inline -pr-4" />Auction</h1>
 
@@ -122,6 +121,7 @@ export default function PlayerGallery() {
         </div>
       </div>
       <PlayerSearch setFilter={setFilter} players={players} setCurrentIndex={setCurrentIndex} />
+      <Shortcuts />
       <CustomIncrement bid={currentBid} setCurrentBid={setCurrentBid} />
       <div className="flex items-center justify-around w-full">
         {currentPlayer ? (
@@ -134,7 +134,7 @@ export default function PlayerGallery() {
           <PlayerCard player="EMPTY" />
         )}
 
-        <div className="absolute bottom-10 flex w-11/12 justify-between">
+        <div className="absolute bottom-10 flex w-11/12 justify-between hidden">
           <button onClick={prev} className="control-btn text-[#674D63] p-3 w-28 rounded-sm text-xl font-semibold cursor-pointer">Prev</button>
           <button onClick={next} className="control-btn text-[#674D63] p-3 w-28 rounded-sm text-xl font-semibold cursor-pointer">Next</button>
         </div>

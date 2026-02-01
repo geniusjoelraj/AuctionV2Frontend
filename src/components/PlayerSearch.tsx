@@ -9,6 +9,7 @@ import {
 import { Player, PlayerType } from "@/types/api"
 import { Dispatch, SetStateAction, useRef, useState } from "react"
 import { useHotkeys } from "react-hotkeys-hook"
+import { Kbd } from "./ui/kbd"
 
 export function PlayerSearch({ players, setCurrentIndex, setFilter }: { players: Array<Player>, setCurrentIndex: Dispatch<SetStateAction<number>>, setFilter: Dispatch<SetStateAction<PlayerType>> }) {
   const [selectedPlayer, setSelectedPlayer] = useState("")
@@ -40,7 +41,8 @@ export function PlayerSearch({ players, setCurrentIndex, setFilter }: { players:
         name="player"
         autoHighlight
       >
-        <ComboboxInput placeholder="Search for player" ref={searchRef} />
+
+        <ComboboxInput placeholder="Search" ref={searchRef} />
         <ComboboxContent>
           <ComboboxEmpty>No players found.</ComboboxEmpty>
           <ComboboxList>
@@ -48,8 +50,11 @@ export function PlayerSearch({ players, setCurrentIndex, setFilter }: { players:
               <ComboboxItem key={item} value={item}>
                 {item}
               </ComboboxItem>
+
             )}
+
           </ComboboxList>
+
         </ComboboxContent>
       </Combobox>
       <button type="submit" className="bg-[#674D63] p-2 py-1 rounded-sm">Go</button>
