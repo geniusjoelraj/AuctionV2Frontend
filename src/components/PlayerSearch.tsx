@@ -7,10 +7,15 @@ import {
   ComboboxList,
 } from "@/components/ui/combobox"
 import { Player, PlayerType } from "@/types/api"
-import { Dispatch, SetStateAction, useState } from "react"
+import { Dispatch, SetStateAction, useRef, useState } from "react"
+import { useHotkeys } from "react-hotkeys-hook"
 
 export function PlayerSearch({ players, setCurrentIndex, setFilter }: { players: Array<Player>, setCurrentIndex: Dispatch<SetStateAction<number>>, setFilter: Dispatch<SetStateAction<PlayerType>> }) {
   const [selectedPlayer, setSelectedPlayer] = useState("")
+  const searchRef = useRef<HTMLInputElement>(null)
+
+  useHotkeys('ctrl+f', () => { searchRef.current?.focus(); }, { preventDefault: true });
+  useHotkeys('esc', () => { searchRef.current?.blur(); }, { enableOnFormTags: true });
 
   const search = (formdata: FormData) => {
     const playerName = formdata.get("player") as string
@@ -33,8 +38,9 @@ export function PlayerSearch({ players, setCurrentIndex, setFilter }: { players:
         value={selectedPlayer}
         onValueChange={(value) => setSelectedPlayer(value || "")}
         name="player"
+        autoHighlight
       >
-        <ComboboxInput placeholder="Search for player" />
+        <ComboboxInput placeholder="Search for player" ref={searchRef} />
         <ComboboxContent>
           <ComboboxEmpty>No players found.</ComboboxEmpty>
           <ComboboxList>

@@ -5,23 +5,45 @@ import PlayerCard from "@/components/PlayerCard";
 import Bidder from "@/components/Bidder";
 import Bid from "@/components/Bid";
 import { PlayerSearch } from "@/components/PlayerSearch";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useHotkeys } from 'react-hotkeys-hook'
 
 export default function PlayerGallery() {
   const [players, setPlayers] = useState<Player[]>([]);
   const [filter, setFilter] = useState<PlayerType>("BATSMAN");
+  const [playerIndexes, setPlayerIndexes] = useState({
+    batsman: 0,
+    bowler: 0,
+    allrounder: 0,
+    keeper: 0
+  })
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter()
-  useHotkeys('f', () => toast('search'))
+  const getIndexByFilter = (filter: string) => {
+    switch (filter) {
+      case 'BATSMAN': return playerIndexes.batsman;
+      case 'BOWLER': return playerIndexes.bowler;
+      case 'ALL_ROUNDER': return playerIndexes.allrounder;
+      case 'WICKET_KEEPER': return playerIndexes.keeper;
+      default: return 0;
+    }
+  };
+  const filterToKey: Record<string, keyof typeof playerIndexes> = {
+    BATSMAN: 'batsman',
+    BOWLER: 'bowler',
+    ALL_ROUNDER: 'allrounder',
+    WICKET_KEEPER: 'keeper',
+  };
+
+
   useHotkeys('1', () => handleFilterChange('BATSMAN'))
   useHotkeys('2', () => handleFilterChange('BOWLER'))
   useHotkeys('3', () => handleFilterChange('ALL_ROUNDER'))
   useHotkeys('4', () => handleFilterChange('WICKET_KEEPER'))
-  useHotkeys('right', () => setCurrentIndex(prev => prev + 1))
-  useHotkeys('left', () => setCurrentIndex(prev => prev - 1))
+  useHotkeys('right', () => next())
+  useHotkeys('left', () => prev())
 
   useEffect(() => {
     if (localStorage.getItem('teamName') !== 'admin') {
@@ -53,17 +75,27 @@ export default function PlayerGallery() {
 
   const handleFilterChange = (val: string) => {
     setFilter(val as PlayerType);
-    setCurrentIndex(0);
+    setCurrentIndex(getIndexByFilter(val));
+    console.log(playerIndexes);
   };
 
   const next = () => {
-    if (filteredPlayers.length > 0) {
+    if (filteredPlayers.length > 0 && currentIndex < filteredPlayers.length - 1) {
+      console.log('filter:', filter, 'key:', filterToKey[filter], 'prev:', playerIndexes);
+      setPlayerIndexes((prev) => ({
+        ...prev,
+        [filterToKey[filter]]: prev[filterToKey[filter]] + 1,
+      }));
       setCurrentIndex((prev) => (prev + 1));
     }
   };
 
   const prev = () => {
-    if (filteredPlayers.length > 0) {
+    if (filteredPlayers.length > 0 && currentIndex > 0) {
+      setPlayerIndexes((prev) => ({
+        ...prev,
+        [filterToKey[filter]]: prev[filterToKey[filter]] - 1,
+      }));
       setCurrentIndex((prev) => (prev - 1));
     }
   };
