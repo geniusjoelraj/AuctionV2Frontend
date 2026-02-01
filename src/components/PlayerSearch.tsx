@@ -46,7 +46,7 @@ export function PlayerSearch({ players, setCurrentIndex, setFilter }: { players:
           </ComboboxList>
         </ComboboxContent>
       </Combobox>
-      <button type="submit" className="bg-blue-400 p-2 py-1 rounded-sm">Go</button>
+      <button type="submit" className="bg-[#674D63] p-2 py-1 rounded-sm">Go</button>
     </form>
   )
 }

@@ -10,19 +10,50 @@
 
 
 .name {
-background: linear-gradient(0deg, #B28028 0%, #E4CD6E 43.27%);
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
-background-clip: text;
-text-fill-color: transparent;
-/* border: 0.2px solid #B47B11; */
-/* text-shadow: 0px 2px 9.9px rgba(0, 0, 0, 0.73); */
+  background: linear-gradient(0deg, #B28028 0%, #E4CD6E 43.27%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+  /* border: 0.2px solid #B47B11; */
+  /* text-shadow: 0px 2px 9.9px rgba(0, 0, 0, 0.73); */
 }
 
 .stat {
-background: linear-gradient(180deg, #E5CE6E 42.79%, #B38123 100%);
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
-background-clip: text;
-text-fill-color: transparent;
+  background: linear-gradient(180deg, #E5CE6E 42.79%, #B38123 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
+.bid-btn {
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+}
+
+.control-btn {
+  background: linear-gradient(90deg, #E5CE6E 0%, #B47B11 100%);
+}
+
+
+
+.glass-btn {
+box-shadow: inset 2.9px -2.9px 2.9px rgba(194, 194, 194, 0.1), inset -2.9px 2.9px 2.9px rgba(255, 255, 255, 0.1);
+backdrop-filter: blur(2.9px);
+transition: all;
+transition-duration: 0.5s;
+}
+
+.glass-btn:hover {
+background: rgba(0, 139, 0, 0.3);
+}
+
+.red-glass-btn {
+background: rgba(255, 0, 0, 0.3);
+box-shadow: inset 2.9px -2.9px 2.9px rgba(194, 194, 194, 0.1), inset -2.9px 2.9px 2.9px rgba(255, 255, 255, 0.1);
+backdrop-filter: blur(10.9px);
+}
+
+.red-glass-btn:hover {
+background: rgba(255, 0, 0, 0.5);
 }

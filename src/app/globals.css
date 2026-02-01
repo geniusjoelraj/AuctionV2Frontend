@@ -2,6 +2,7 @@
 @import "tw-animate-css";
  
 @custom-variant dark (&:is(.dark *));
+
  
 :root {
   --background: oklch(1 0 0);
@@ -75,6 +76,8 @@
 }
  
 @theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --bg-stadium: url('/ipl-stadium-bg.jpg');
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);

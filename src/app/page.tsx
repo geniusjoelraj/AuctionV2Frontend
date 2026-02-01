@@ -5,8 +5,9 @@ import PlayerCard from "@/components/PlayerCard";
 import Bidder from "@/components/Bidder";
 import Bid from "@/components/Bid";
 import { PlayerSearch } from "@/components/PlayerSearch";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { useHotkeys } from 'react-hotkeys-hook'
 
 export default function PlayerGallery() {
   const [players, setPlayers] = useState<Player[]>([]);
@@ -14,8 +15,16 @@ export default function PlayerGallery() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter()
+  useHotkeys('f', () => toast('search'))
+  useHotkeys('1', () => handleFilterChange('BATSMAN'))
+  useHotkeys('2', () => handleFilterChange('BOWLER'))
+  useHotkeys('3', () => handleFilterChange('ALL_ROUNDER'))
+  useHotkeys('4', () => handleFilterChange('WICKET_KEEPER'))
+  useHotkeys('right', () => setCurrentIndex(prev => prev + 1))
+  useHotkeys('left', () => setCurrentIndex(prev => prev - 1))
+
   useEffect(() => {
-    if (localStorage.getItem('team') !== 'admin') {
+    if (localStorage.getItem('teamName') !== 'admin') {
       router.push('/team/view')
     }
   })
@@ -62,16 +71,16 @@ export default function PlayerGallery() {
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <main className="flex flex-col items-center relative bg-blue-900 h-dvh text-white text-nowrap">
+    <main style={{ backgroundImage: "url('/ipl-stadium-bg.jpg')" }} className="flex flex-col items-center relative bg-blue-900 h-dvh text-white text-nowrap bg-cover bg-opacity-0 px-20">
       <div className="flex flex-col items-center relative">
-        <h1 className="text-3xl font-bold mb-6">IPL Auction</h1>
+        <h1 className="text-4xl font-bold mb-6"><img src="/srm-ipl.png" alt="IPL" width={100} className="inline -pr-4" />Auction</h1>
 
         <div className="flex gap-4 mb-8">
           {["BATSMAN", "BOWLER", "ALL_ROUNDER", "WICKET_KEEPER"].map((cat) => (
             <button
               key={cat}
               onClick={() => handleFilterChange(cat)}
-              className={`px-4 py-2 rounded-sm font-bold ${filter === cat ? "bg-blue-600 text-white" : "bg-white text-gray-700"
+              className={`px-4 py-2 rounded-sm font-bold ${filter === cat ? "bg-[#674D63] text-white" : "bg-white text-[#674D63]"
                 }`}
             >
               {cat.replace("_", " ")}
@@ -92,8 +101,8 @@ export default function PlayerGallery() {
         )}
 
         <div className="absolute bottom-10 flex w-11/12 justify-between">
-          <button onClick={prev} className="bg-yellow-600 p-3 rounded-sm cursor-pointer">Prev</button>
-          <button onClick={next} className="bg-yellow-600 p-3 rounded-sm cursor-pointer">Next</button>
+          <button onClick={prev} className="control-btn text-[#674D63] p-3 w-28 rounded-sm text-xl font-semibold cursor-pointer">Prev</button>
+          <button onClick={next} className="control-btn text-[#674D63] p-3 w-28 rounded-sm text-xl font-semibold cursor-pointer">Next</button>
         </div>
       </div>
       <ToastContainer
