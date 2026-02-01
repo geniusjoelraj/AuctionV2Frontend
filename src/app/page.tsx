@@ -8,6 +8,7 @@ import { PlayerSearch } from "@/components/PlayerSearch";
 import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useHotkeys } from 'react-hotkeys-hook'
+import CustomIncrement from "@/components/CustomIncrement";
 
 export default function PlayerGallery() {
   const [players, setPlayers] = useState<Player[]>([]);
@@ -121,6 +122,7 @@ export default function PlayerGallery() {
         </div>
       </div>
       <PlayerSearch setFilter={setFilter} players={players} setCurrentIndex={setCurrentIndex} />
+      <CustomIncrement bid={currentBid} setCurrentBid={setCurrentBid} />
       <div className="flex items-center justify-around w-full">
         {currentPlayer ? (
           <>
