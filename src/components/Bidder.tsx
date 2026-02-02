@@ -2,7 +2,7 @@
 import { Player } from "@/types/api";
 import { purchasePlayer, refundPlayer } from "@/utils/api";
 import { teams } from "@/utils/constants";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
 export default function Bidder({ player, finalBid }: { player: Player, finalBid: number }) {
@@ -27,7 +27,7 @@ export default function Bidder({ player, finalBid }: { player: Player, finalBid:
           {team}
         </button>
       ))}
-      <button className="bg-red-500 p-2 rounded-md hover:bg-red-400 cursor-pointer col-span-2 text-center red-glass-btn" onClick={() => refundPlayer(player.id, gameId)}>Refund</button>
+      <button className="hidden bg-red-500 p-2 rounded-md hover:bg-red-400 cursor-pointer col-span-2 text-center red-glass-btn" onClick={() => refundPlayer(player.id, gameId)}>Refund</button>
     </div>
   )
 }

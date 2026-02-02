@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -9,6 +9,7 @@ import { toast, ToastContainer } from 'react-toastify'
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 import { getGames } from '@/utils/api'
 import { Game } from '@/types/api'
+import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList } from '@/components/ui/combobox'
 
 
 
@@ -68,6 +69,8 @@ export default function LoginPage() {
   const [roomId, setRoomId] = useState('')
   const [password, setPassword] = useState('')
   const router = useRouter()
+  const searchRef = useRef(null)
+  const [selectedTeam, setSelectedTeam] = useState('')
 
   async function gameExists(gameId: string): Promise<boolean> {
     try {
@@ -126,9 +129,9 @@ export default function LoginPage() {
   // In handleLogin:
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    const isAuthenticated = await AuthUser(teamSlug, password, router, roomId)
-    if (isAuthenticated && teamSlug !== 'admin') {
-      localStorage.setItem('teamName', teamSlug)
+    const isAuthenticated = await AuthUser(selectedTeam, password, router, roomId)
+    if (isAuthenticated && selectedTeam !== 'admin') {
+      localStorage.setItem('teamName', selectedTeam)
       router.push('/team/view')
     }
   }
@@ -138,13 +141,37 @@ export default function LoginPage() {
       <form onSubmit={handleLogin} className="w-full max-w-md space-y-4 p-8">
         <h1 className="text-2xl font-bold">Enter Team</h1>
 
-        <Input
-          type="text"
-          placeholder="Team Name"
-          value={teamSlug}
-          onChange={(e) => setTeamSlug(e.target.value)}
-          required
-        />
+        {/* <Input */}
+        {/*   type="text" */}
+        {/*   placeholder="Team Name" */}
+        {/*   value={teamSlug} */}
+        {/*   onChange={(e) => setTeamSlug(e.target.value)} */}
+        {/*   required */}
+        {/* /> */}
+        <Combobox
+          value={selectedTeam}
+          onValueChange={(value) => setSelectedTeam(value || "")}
+          name="player"
+          autoHighlight
+          items={teams}
+        >
+
+          <ComboboxInput placeholder="Search" ref={searchRef} />
+          <ComboboxContent>
+            <ComboboxEmpty>No players found.</ComboboxEmpty>
+            <ComboboxList>
+              {(item) => (
+                <ComboboxItem key={item} value={item}>
+                  {item}
+                </ComboboxItem>
+
+              )}
+
+            </ComboboxList>
+
+          </ComboboxContent>
+        </Combobox>
+
         <Input
           type="text"
           placeholder="Room Id"

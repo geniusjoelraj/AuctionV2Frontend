@@ -3,7 +3,6 @@ import StatDisplay from "@/components/StatDisplay";
 import { domToPng } from "modern-screenshot";
 import '../style.css'
 import { useRef } from "react";
-import { format } from "path";
 import { formatNumber } from "@/utils/bid";
 
 const proxyUrl = (url: string) => `/api/image-proxy?url=${encodeURIComponent(url)}`;

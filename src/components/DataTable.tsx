@@ -2,7 +2,6 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableFooter,
   TableHead,
@@ -56,9 +55,9 @@ export function DataTable({ players, teamDetails, teamName }: { players: Array<T
 
   return (
     <>
-      <div className="">Current Bid: {bid}</div>
+      <div className="">Current Bid: {formatNumber(bid)}</div>
       <Table>
-        <TableCaption>The list of players you have purchased</TableCaption>
+        {/* <TableCaption>The list of players you have purchased</TableCaption> */}
         <TableHeader>
           <TableRow>
             <TableHead>Name</TableHead>
@@ -90,19 +89,21 @@ export function DataTable({ players, teamDetails, teamName }: { players: Array<T
           </TableRow>
         </TableFooter>
       </Table>
-      <p className="text-center mt-10">Additional details</p>
-      <div className="grid grid-cols-2 gap-4 p-4 rounded-xl shadow-sm">
-        <div className="p-2 border-b">Balance: <span className="font-bold">₹{formatNumber(team.balance)}</span></div>
-        <div className="p-2 border-b">Spent: <span className="font-bold">₹{formatNumber(100000000 - team.balance)}</span></div>
+      <div className="flex flex-col items-center justify-center">
+        <p className="text-center mt-10 font-bold">Additional details</p>
+        <div className="grid grid-cols-2 gap-4 p-4 rounded-xl shadow-sm ">
+          <div className="p-2 border-b">Balance: <span className="font-bold">₹{formatNumber(team.balance)}</span></div>
+          <div className="p-2 border-b">Spent: <span className="font-bold">₹{formatNumber(100000000 - team.balance)}</span></div>
 
-        <div className="p-2 border-b">Total Points: <span className="font-bold">{team.points}</span></div>
-        <div className="p-2 border-b">All Rounders: <span className="font-bold">{team.allRounderCount}</span></div>
+          <div className="p-2 border-b">Total Points: <span className="font-bold">{team.points}</span></div>
+          <div className="p-2 border-b">All Rounders: <span className="font-bold">{team.allRounderCount}</span></div>
 
-        <div className="p-2 border-b">Batsman: <span className="font-bold">{team.batsmanCount}</span></div>
-        <div className="p-2 border-b">Bowler: <span className="font-bold">{team.bowlerCount}</span></div>
+          <div className="p-2 border-b">Batsman: <span className="font-bold">{team.batsmanCount}</span></div>
+          <div className="p-2 border-b">Bowler: <span className="font-bold">{team.bowlerCount}</span></div>
 
-        <div className="p-2">Wicket Keeper: <span className="font-bold">{team.wicketKeeperCount}</span></div>
-        <div className="p-2">Player Count: <span className="font-bold">{team.playerCount}</span></div>
+          <div className="p-2">Wicket Keeper: <span className="font-bold">{team.wicketKeeperCount}</span></div>
+          <div className="p-2">Player Count: <span className="font-bold">{team.playerCount}</span></div>
+        </div>
       </div>
     </>
   )

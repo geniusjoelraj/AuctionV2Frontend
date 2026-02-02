@@ -1,3 +1,5 @@
+import { TeamIdType } from "./bid";
+
 export interface BatsmanStats {
   runs: number;
   matches: number;
@@ -87,4 +89,19 @@ export type Game = NewGame &
 {
   "status": "ACTIVE" | "INACTIVE",
   id: number
+}
+
+export type DataTableType = {
+  players: Transaction[];
+  teamDetails: TeamDetails;
+}
+
+export type GameLog = {
+  "playerId": number;
+  "playerName": string;
+  "team": TeamIdType;
+  "transactionType": "PURCHASE" | "REFUND"
+  "amount": number;
+  "playerStatus": "SOLD" | "FOR_SALE"
+  "time": string
 }

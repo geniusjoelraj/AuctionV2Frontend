@@ -164,3 +164,17 @@ export const createGame = async (newgame: NewGame) => {
     throw err
   }
 }
+
+export const getLogs = async (gameId: number) => {
+  try {
+    const response = await fetch(`${BASE_URL}/game/${gameId}/audit`)
+    if (response.ok) {
+      const result = await response.json()
+      return result
+    }
+  } catch (err) {
+    console.log("Failed to fetch game logs");
+    throw err
+  }
+
+}

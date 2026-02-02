@@ -9,7 +9,6 @@ import {
 import { Player, PlayerType } from "@/types/api"
 import { Dispatch, SetStateAction, useRef, useState } from "react"
 import { useHotkeys } from "react-hotkeys-hook"
-import { Kbd } from "./ui/kbd"
 
 export function PlayerSearch({ players, setCurrentIndex, setFilter }: { players: Array<Player>, setCurrentIndex: Dispatch<SetStateAction<number>>, setFilter: Dispatch<SetStateAction<PlayerType>> }) {
   const [selectedPlayer, setSelectedPlayer] = useState("")
