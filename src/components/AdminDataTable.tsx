@@ -27,16 +27,16 @@ export function AdminDataTable() {
       });
     }
 
-  }, [curTeam]);
+  }, []);
 
   if (!data) return <div>Loading...</div>;
 
 
   return (
     <>
-      <div className="flex p-3">
-        <div className="flex-1/2">
-          <Tabs defaultValue="account" className="w-100">
+      <div className="flex p-5 gap-5 h-full items-start">
+        <div className="flex-1/2 flex flex-col gap-5 justify-center items-center">
+          <Tabs defaultValue="account" className="">
             <TabsList variant='line'>
               {teams.map((team) => (
                 <TabsTrigger value={team} key={team} onClick={() => setCurTeam(team)}>{team}</TabsTrigger>
@@ -45,8 +45,7 @@ export function AdminDataTable() {
           </Tabs>
           <DataTableWrapper teamName={curTeam} key={curTeam} />
         </div>
-        <GameLogs />
-        <div className="flex-1/2"></div>
+        <div className="flex-1/2"><GameLogs /> </div>
       </div>
     </>
   )
