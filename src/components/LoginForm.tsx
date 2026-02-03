@@ -1,0 +1,45 @@
+'use client'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import LoginForm from './LoginPage'
+import { useState } from 'react'
+
+function Login() {
+
+  const [asAdmin, setAsAdmin] = useState(false)
+  return (
+    <div className='relative flex h-dvh items-center justify-center overflow-x-hidden px-4 py-10 sm:px-6 lg:px-8'>
+      <div className='absolute'>
+      </div>
+
+      <Card className='z-1 w-full border-none shadow-md sm:max-w-lg'>
+        <CardHeader className='gap-6'>
+          <div>
+            <CardTitle className='text-2xl'>Log In</CardTitle>
+            {/* <CardDescription className='text-base'></CardDescription> */}
+          </div>
+        </CardHeader>
+
+        <CardContent>
+          {/* Login Select */}
+          <div className='mb-6 flex flex-wrap gap-4 sm:gap-6'>
+            <Button variant={asAdmin ? 'outline' : 'default'} onClick={() => setAsAdmin(false)} className='grow'>
+              Login as Team
+            </Button>
+            <Button variant={asAdmin ? 'default' : 'outline'} onClick={() => setAsAdmin(true)} className='grow'>
+              Login as Admin
+            </Button>
+          </div>
+
+          {/* Login Form */}
+          <div className='space-y-4'>
+            <LoginForm isAdmin={asAdmin} />
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+
+  )
+}
+
+export default Login

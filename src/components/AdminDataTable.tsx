@@ -15,7 +15,7 @@ export function AdminDataTable() {
 
   useEffect(() => {
     if (!localStorage.getItem('game') && localStorage.getItem('teamName') !== 'admin') {
-      router.push('/team')
+      router.push('/')
     }
     const gameId = parseInt(localStorage.getItem('game')!);
     if (gameId) {

@@ -1,7 +1,7 @@
 'use client'
 
 import { Game, NewGame } from "@/types/api"
-import { createGame, getGames } from "@/utils/api"
+import { createGame, getGames, startGame } from "@/utils/api"
 import { Button, Input } from "@base-ui/react"
 import { Label } from "@radix-ui/react-label"
 import { useRouter } from "next/navigation"
@@ -9,7 +9,6 @@ import React, { useState } from "react"
 import { toast, ToastContainer } from "react-toastify"
 
 export default function GameCreate() {
-  const router = useRouter()
   const [gameId, setGameId] = useState<string>('')
   const [gameInitialAmount, setGameInitialAmount] = useState<string>('')
   const [gameName, setGameName] = useState<string>('')
@@ -19,7 +18,8 @@ export default function GameCreate() {
     bowler: '',
     allrounder: '',
     keeper: '',
-    uncapped: ''
+    uncapped: '',
+    legends: ''
   })
   // setPlayerLimits(prev => ({ ...prev, batsmen: '5' }))
 
@@ -35,6 +35,7 @@ export default function GameCreate() {
       bowlersPerTeam: parseInt(playerLimits.bowler),
       allRounderPerTeam: parseInt(playerLimits.allrounder),
       wicketKeeperPerTeam: parseInt(playerLimits.keeper),
+      LegendsPerTeam: parseInt(playerLimits.legends),
       unCappedPerTeam: parseInt(playerLimits.uncapped)
     }
     createGame(newGame)
@@ -46,15 +47,15 @@ export default function GameCreate() {
         if (games) {
           const gameIds = games.map((game) => game.id)
           if (gameIds.includes(parseInt(gameId))) {
-            localStorage.setItem('game', gameId)
-            const game = games.find((game) => game.id === parseInt(gameId))
-            if (game?.status === 'INACTIVE') {
-              toast.error('Game not started yet')
-            } else {
-              router.push('/')
-            }
-          } else {
-            toast.error('No such game exits')
+            startGame(parseInt(gameId))
+            //   const game = games.find((game) => game.id === parseInt(gameId))
+            //   if (game?.status === 'INACTIVE') {
+            //     toast.error('Game not started yet')
+            //   } else {
+            //     router.push('/')
+            //   }
+            // } else {
+            //   toast.error('No such game exits')
           }
         }
       })
@@ -66,7 +67,7 @@ export default function GameCreate() {
     isJoin ?
       <div className="flex min-h-screen items-center justify-center">
         <form onSubmit={handleGame} className="w-full max-w-md space-y-4 p-8">
-          <h1 className="text-2xl font-bold">Join Game</h1>
+          <h1 className="text-2xl font-bold">Start Game</h1>
           <Input
             type="text"
             placeholder="game id"
@@ -75,7 +76,7 @@ export default function GameCreate() {
             onChange={(e) => setGameId(e.target.value)}
             required
           />
-          <Button type="submit" className='bg-primary text-secondary px-2 py-1 rounded-sm'>Join</Button>
+          <Button type="submit" className='bg-primary text-secondary px-2 py-1 rounded-sm'>Start</Button>
           <p className="text-primary text-sm cursor-pointer underline" onClick={() => setIsJoin(false)}>Create Game</p>
         </form>
         <ToastContainer

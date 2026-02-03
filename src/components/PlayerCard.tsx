@@ -88,7 +88,9 @@ export default function PlayerCard({ player }: { player: Player | "EMPTY" }) {
             <p style={{ color: "#FFE2AA", fontSize: "1.5rem", fontWeight: 900 }}>{formatNumber(player.price)}</p>
           </div>
           {/* Image */}
-          <img style={{ gridColumn: "span 6 / span 6", gridRow: "span 7 / span 7", gridColumnStart: 3, gridRowStart: 1, scale: "110%" }} src={proxyUrl(player.imageLink)} alt="player image" />
+          <img style={{ gridColumn: "span 6 / span 6", gridRow: "span 7 / span 7", gridColumnStart: 3, gridRowStart: 1, scale: "110%" }}
+            src={proxyUrl(player.imageLink)}
+            alt="player image" />
           {/* Stats */}
           <div style={{ gridColumn: "span 8 / span 8", gridRow: "span 3 / span 3", gridColumnStart: 1, gridRowStart: 8, display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center" }}>
             <p style={{

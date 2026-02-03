@@ -11,8 +11,11 @@ export function DataTableWrapper({ teamName }: { teamName?: string }) {
   const [data, setData] = useState<any>();
 
   useEffect(() => {
-    if (!localStorage.getItem('game') && !localStorage.getItem('team')) {
-      router.push('/team')
+    if (!localStorage.getItem('game') && !localStorage.getItem('teamName')) {
+      router.push('/')
+    }
+    if (localStorage.getItem('teamName') !== 'admin') {
+      router.push('/team/view')
     }
     const gameId = parseInt(localStorage.getItem('game')!);
     const team = teamName ? teamName : localStorage.getItem('teamName')!;

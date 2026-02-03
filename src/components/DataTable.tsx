@@ -9,16 +9,26 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { TeamDetails, Transaction } from "@/types/api"
+import { NewGame, TeamDetails, Transaction } from "@/types/api"
 import { useEffect, useState } from "react"
 import { socketService } from "@/socket"
 import { formatNumber } from "@/utils/bid"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion"
+import { getGame } from "@/utils/api"
 
 
 export function DataTable({ players, teamDetails, teamName }: { players: Array<Transaction>, teamDetails: TeamDetails, teamName: string }) {
   const [playersData, setPlayersData] = useState<Transaction[]>(players)
   const [team, setTeams] = useState(teamDetails)
   const [bid, setBid] = useState(0)
+  const [gameDetails, setGameDetails] = useState<NewGame>()
+  useEffect(() => {
+    getGame(parseInt(localStorage.getItem('game')!)).then((game) => {
+      if (game) {
+        setGameDetails(game)
+      }
+    })
+  }, [])
 
 
   useEffect(() => {
@@ -89,22 +99,29 @@ export function DataTable({ players, teamDetails, teamName }: { players: Array<T
           </TableRow>
         </TableFooter>
       </Table>
-      <div className="flex flex-col items-center justify-center">
-        <p className="text-center mt-10 font-bold">Additional details</p>
-        <div className="grid grid-cols-2 gap-4 p-4 rounded-xl shadow-sm ">
-          <div className="p-2 border-b">Balance: <span className="font-bold">₹{formatNumber(team.balance)}</span></div>
-          <div className="p-2 border-b">Spent: <span className="font-bold">₹{formatNumber(100000000 - team.balance)}</span></div>
+      <Accordion type="single" collapsible className="w-full">
+        <AccordionItem value="item-1">
+          <AccordionTrigger>Additional details</AccordionTrigger>
+          <AccordionContent>
+            <div className="grid grid-cols-2 gap-4 p-4 rounded-xl shadow-sm ">
+              <div className="p-2 border-b">Balance: <span className="font-bold text-green-500">₹{formatNumber(team.balance)}</span></div>
+              <div className="p-2 border-b">Spent: <span className="font-bold text-red-500">₹{formatNumber((gameDetails?.initialBalance || 0) - team.balance)}</span></div>
 
-          <div className="p-2 border-b">Total Points: <span className="font-bold">{team.points}</span></div>
-          <div className="p-2 border-b">All Rounders: <span className="font-bold">{team.allRounderCount}</span></div>
+              <div className="p-2 border-b">Total Points: <span className="font-bold text-yellow-500">{team.points}</span></div>
+              <div className="p-2 border-b">All Rounders: <span className="font-bold">{team.allRounderCount}/{gameDetails?.allRounderPerTeam}</span></div>
 
-          <div className="p-2 border-b">Batsman: <span className="font-bold">{team.batsmanCount}</span></div>
-          <div className="p-2 border-b">Bowler: <span className="font-bold">{team.bowlerCount}</span></div>
+              <div className="p-2 border-b">Batsman: <span className="font-bold">{team.batsmanCount}/{gameDetails?.batsmenPerTeam}</span></div>
+              <div className="p-2 border-b">Bowler: <span className="font-bold">{team.bowlerCount}/{gameDetails?.bowlersPerTeam}</span></div>
 
-          <div className="p-2">Wicket Keeper: <span className="font-bold">{team.wicketKeeperCount}</span></div>
-          <div className="p-2">Player Count: <span className="font-bold">{team.playerCount}</span></div>
-        </div>
-      </div>
+              <div className="p-2 border-b">Uncapped: <span className="font-bold">{team.uncappedCount}/{gameDetails?.unCappedPerTeam}</span></div>
+              {/* <div className="p-2 border-b">Legends: <span className="font-bold">{team.legendsCount}/{gameDetails?.legendsPerTeam}</span></div> */}
+
+              <div className="p-2">Wicket Keeper: <span className="font-bold">{team.wicketKeeperCount}/{gameDetails?.wicketKeeperPerTeam}</span></div>
+              <div className="p-2">Player Count: <span className="font-bold">{team.playerCount}/{gameDetails?.playersPerTeam}</span></div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </>
   )
 }

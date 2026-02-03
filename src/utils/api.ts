@@ -142,6 +142,17 @@ export const getGames = async () => {
   }
 }
 
+export const getGame = async (gameId: number) => {
+  try {
+    const response = await fetch(`${BASE_URL}/game/${gameId}`)
+    const games: Game = await response.json()
+    return games
+  } catch (err) {
+    console.log("Failed to get games", err);
+    throw err
+  }
+}
+
 export const createGame = async (newgame: NewGame) => {
   try {
     const response = await fetch(`${BASE_URL}/game`, {
@@ -177,4 +188,27 @@ export const getLogs = async (gameId: number) => {
     throw err
   }
 
+}
+
+export const startGame = async (gameId: number) => {
+  try {
+    const response = await fetch(`${BASE_URL}/game/${gameId}/start`, {
+      method: 'POST',
+      body: JSON.stringify({
+        command: "START"
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    if (response.ok) {
+      const res = await response.json()
+      toast.success(res.message)
+    } else {
+      const errorData = await response.json();
+      toast.error(errorData.message)
+    }
+  } catch (err) {
+    console.log("Failed to start game", err);
+  }
 }

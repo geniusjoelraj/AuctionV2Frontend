@@ -10,6 +10,7 @@ import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.share
 import { getGames } from '@/utils/api'
 import { Game } from '@/types/api'
 import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList } from '@/components/ui/combobox'
+import Header from '@/components/Header'
 
 
 
@@ -64,8 +65,7 @@ function AuthUser(username: string, password: string, router: AppRouterInstance,
   return true
 }
 
-export default function LoginPage() {
-  const [teamSlug, setTeamSlug] = useState('')
+export default function Login() {
   const [roomId, setRoomId] = useState('')
   const [password, setPassword] = useState('')
   const router = useRouter()
