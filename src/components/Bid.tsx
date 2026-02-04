@@ -18,7 +18,7 @@ export default function Bid({
     return () => {
       socketService.disconnect();
     };
-  }, [setCurrentBid]);
+  }, [currentBid]);
 
   const handleSendBid = (bid: number) => {
     socketService.publish("/app/game/1/bids", { currentBid: bid });

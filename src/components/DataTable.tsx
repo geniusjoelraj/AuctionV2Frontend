@@ -15,6 +15,8 @@ import { socketService } from "@/socket"
 import { formatNumber } from "@/utils/bid"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion"
 import { getGame } from "@/utils/api"
+import { Button } from "./ui/button"
+import SetSubstitute from "./SetSubstitute"
 
 
 export function DataTable({ players, teamDetails, teamName }: { players: Array<Transaction>, teamDetails: TeamDetails, teamName: string }) {
@@ -22,6 +24,8 @@ export function DataTable({ players, teamDetails, teamName }: { players: Array<T
   const [team, setTeams] = useState(teamDetails)
   const [bid, setBid] = useState(0)
   const [gameDetails, setGameDetails] = useState<NewGame>()
+  const [teamComplete, setTeamComplete] = useState(false)
+  const isAdmin = localStorage.getItem('teamName') === 'admin';
   useEffect(() => {
     getGame(parseInt(localStorage.getItem('game')!)).then((game) => {
       if (game) {
@@ -29,6 +33,17 @@ export function DataTable({ players, teamDetails, teamName }: { players: Array<T
       }
     })
   }, [])
+
+  useEffect(() => {
+    if (playersData.length === gameDetails?.playersPerTeam) {
+      setTeamComplete(true)
+    } else {
+      setTeamComplete(false)
+    }
+  })
+  const setSubstitute = () => {
+    setTeamComplete(true)
+  }
 
 
   useEffect(() => {
@@ -62,10 +77,31 @@ export function DataTable({ players, teamDetails, teamName }: { players: Array<T
       };
     });
   }, [teamName]);
+  const validTeam: Transaction[] = [
+    { name: "Virat Kohli", playerType: "BATSMAN", boughtFor: 15000000, points: 95, isForeign: false, isLegend: true, isUncapped: false },
+    { name: "Steve Smith", playerType: "BATSMAN", boughtFor: 12000000, points: 92, isForeign: true, isLegend: false, isUncapped: false },
+    { name: "Joe Root", playerType: "BATSMAN", boughtFor: 10000000, points: 90, isForeign: true, isLegend: false, isUncapped: false },
+    { name: "Kane Williamson", playerType: "BATSMAN", boughtFor: 11000000, points: 91, isForeign: true, isLegend: false, isUncapped: false },
+    { name: "Jasprit Bumrah", playerType: "BOWLER", boughtFor: 12000000, points: 94, isForeign: false, isLegend: false, isUncapped: false },
+    { name: "Pat Cummins", playerType: "BOWLER", boughtFor: 13000000, points: 93, isForeign: true, isLegend: false, isUncapped: false },
+    { name: "Kagiso Rabada", playerType: "BOWLER", boughtFor: 9000000, points: 89, isForeign: true, isLegend: false, isUncapped: false },
+    { name: "Trent Boult", playerType: "BOWLER", boughtFor: 8000000, points: 88, isForeign: true, isLegend: false, isUncapped: false },
+    { name: "Hardik Pandya", playerType: "ALL_ROUNDER", boughtFor: 14000000, points: 90, isForeign: false, isLegend: false, isUncapped: false },
+    { name: "Ben Stokes", playerType: "ALL_ROUNDER", boughtFor: 16000000, points: 94, isForeign: true, isLegend: false, isUncapped: false },
+    { name: "Ravindra Jadeja", playerType: "ALL_ROUNDER", boughtFor: 10000000, points: 89, isForeign: false, isLegend: false, isUncapped: false },
+    { name: "MS Dhoni", playerType: "WICKET_KEEPER", boughtFor: 12000000, points: 88, isForeign: false, isLegend: false, isUncapped: false },
+    { name: "Prithvi Shaw", playerType: "BATSMAN", boughtFor: 2000000, points: 75, isForeign: false, isLegend: false, isUncapped: true },
+    { name: "Arshdeep Singh", playerType: "BOWLER", boughtFor: 1500000, points: 72, isForeign: false, isLegend: false, isUncapped: false },
+    { name: "Shubman Gill", playerType: "BATSMAN", boughtFor: 8000000, points: 85, isForeign: false, isLegend: true, isUncapped: false }
+  ];
 
   return (
     <>
-      <div className="">Current Bid: {formatNumber(bid)}</div>
+      {!isAdmin ?
+        <div className="">Current Bid: {formatNumber(bid)}</div>
+        :
+        <></>
+      }
       <Table>
         {/* <TableCaption>The list of players you have purchased</TableCaption> */}
         <TableHeader>
@@ -79,12 +115,13 @@ export function DataTable({ players, teamDetails, teamName }: { players: Array<T
         </TableHeader>
         <TableBody>
           {playersData.map((player) => (
-            <TableRow key={player.name} className={player.isForeign ? `bg-secondary` : ''}>
+            <TableRow key={player.name} >
               <TableCell>{player.name}</TableCell>
               <TableCell>{player.playerType}</TableCell>
               <TableCell>
                 {player.isUncapped && <Badge variant="default">uncapped</Badge>}
                 {player.isForeign && <Badge variant="secondary">foreign</Badge>}
+                {player.isLegend && <Badge variant="destructive" style={{ background: "linear-gradient(135deg, #E5CD6D 0%, #B47B11 100%)" }}>legend</Badge>}
               </TableCell>
               <TableCell>{player.points}</TableCell>
               <TableCell className="text-right">{formatNumber(player.boughtFor)}</TableCell>
@@ -114,7 +151,7 @@ export function DataTable({ players, teamDetails, teamName }: { players: Array<T
               <div className="p-2 border-b">Bowler: <span className="font-bold">{team.bowlerCount}/{gameDetails?.bowlersPerTeam}</span></div>
 
               <div className="p-2 border-b">Uncapped: <span className="font-bold">{team.uncappedCount}/{gameDetails?.unCappedPerTeam}</span></div>
-              {/* <div className="p-2 border-b">Legends: <span className="font-bold">{team.legendsCount}/{gameDetails?.legendsPerTeam}</span></div> */}
+              <div className="p-2 border-b">Legends: <span className="font-bold">{team.legendsCount}/{gameDetails?.legendsPerTeam}</span></div>
 
               <div className="p-2">Wicket Keeper: <span className="font-bold">{team.wicketKeeperCount}/{gameDetails?.wicketKeeperPerTeam}</span></div>
               <div className="p-2">Player Count: <span className="font-bold">{team.playerCount}/{gameDetails?.playersPerTeam}</span></div>
@@ -122,6 +159,9 @@ export function DataTable({ players, teamDetails, teamName }: { players: Array<T
           </AccordionContent>
         </AccordionItem>
       </Accordion>
+      <Button className={!teamComplete || isAdmin ? 'hidden' : ''} onClick={setSubstitute}>Set Team</Button>
+      {teamComplete && !isAdmin ? <SetSubstitute players={validTeam} /> : <></>}
+
     </>
   )
 }

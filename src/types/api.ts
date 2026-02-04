@@ -70,7 +70,7 @@ export type TeamDetails = {
   "batsmanCount": number;
   "bowlerCount": number;
   "wicketKeeperCount": number;
-  "LegendsCount": number;
+  "legendsCount": number;
   "uncappedCount": number;
 }
 
@@ -83,7 +83,7 @@ export type NewGame = {
   "bowlersPerTeam": number;
   "allRounderPerTeam": number;
   "wicketKeeperPerTeam": number;
-  "LegendsPerTeam": number;
+  "legendsPerTeam": number;
   "unCappedPerTeam": number;
 }
 

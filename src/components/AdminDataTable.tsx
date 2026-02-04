@@ -11,7 +11,7 @@ import GameLogs from "./GameLogs";
 export function AdminDataTable() {
   const router = useRouter()
   const [data, setData] = useState<any>();
-  const [curTeam, setCurTeam] = useState('RCB')
+  const [curTeam, setCurTeam] = useState('CSK')
 
   useEffect(() => {
     if (!localStorage.getItem('game') && localStorage.getItem('teamName') !== 'admin') {
@@ -36,7 +36,7 @@ export function AdminDataTable() {
     <>
       <div className="flex p-5 gap-5 h-full items-start">
         <div className="flex-1/2 flex flex-col gap-5 justify-center items-center">
-          <Tabs defaultValue="account" className="">
+          <Tabs defaultValue="CSK" className="">
             <TabsList variant='line'>
               {teams.map((team) => (
                 <TabsTrigger value={team} key={team} onClick={() => setCurTeam(team)}>{team}</TabsTrigger>

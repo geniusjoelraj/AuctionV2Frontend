@@ -2,13 +2,46 @@ import { Player } from "@/types/api";
 import StatDisplay from "@/components/StatDisplay";
 import { domToPng } from "modern-screenshot";
 import '../style.css'
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import { formatNumber } from "@/utils/bid";
 
 const proxyUrl = (url: string) => `/api/image-proxy?url=${encodeURIComponent(url)}`;
 
 export default function PlayerCard({ player }: { player: Player | "EMPTY" }) {
   const cardRef = useRef<HTMLDivElement>(null);
+  const nameRef = useRef<HTMLParagraphElement>(null);
+  const [nameFontSize, setNameFontSize] = useState(28);
+
+  useEffect(() => {
+    if (player === "EMPTY" || !nameRef.current) return;
+
+    const fitTextToContainer = () => {
+      const textElement = nameRef.current;
+      if (!textElement) return;
+
+      const parentWidth = textElement.parentElement?.offsetWidth || 0;
+      const maxFontSize = 28;
+      let fontSize = maxFontSize;
+
+      // Temporarily set to max size to measure
+      textElement.style.fontSize = `${fontSize}px`;
+
+      // Reduce font size until text fits
+      while (textElement.scrollWidth > parentWidth && fontSize > 8) {
+        fontSize -= 0.5;
+        textElement.style.fontSize = `${fontSize}px`;
+      }
+
+      setNameFontSize(fontSize);
+    };
+
+    fitTextToContainer();
+
+    // Re-fit on window resize
+    window.addEventListener('resize', fitTextToContainer);
+    return () => window.removeEventListener('resize', fitTextToContainer);
+  }, [player]);
+
   if (player === "EMPTY") {
     return (<><svg
       xmlns="http://www.w3.org/2000/svg"
@@ -88,17 +121,22 @@ export default function PlayerCard({ player }: { player: Player | "EMPTY" }) {
             <p style={{ color: "#FFE2AA", fontSize: "1.5rem", fontWeight: 900 }}>{formatNumber(player.price)}</p>
           </div>
           {/* Image */}
-          <img style={{ gridColumn: "span 6 / span 6", gridRow: "span 7 / span 7", gridColumnStart: 3, gridRowStart: 1, scale: "110%" }}
-            src={proxyUrl(player.imageLink)}
+          <img style={{ gridColumn: "span 6 / span 6", gridRow: "span 7 / span 7", gridColumnStart: 3, gridRowStart: 1, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }}
+            src={'/players_images/' + player.name + '.png'}
+            // src="https://res.cloudinary.com/dkpijdg6a/image/upload/v1770182396/unnamed-removebg-preview_1_cjvzgk.png"
             alt="player image" />
           {/* Stats */}
           <div style={{ gridColumn: "span 8 / span 8", gridRow: "span 3 / span 3", gridColumnStart: 1, gridRowStart: 8, display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center" }}>
-            <p style={{
-              fontSize: "28px",
-              fontWeight: 800,
-              marginTop: 0,
-              whiteSpace: 'nowrap'
-            }}
+            <p
+              ref={nameRef}
+              style={{
+                fontSize: `${nameFontSize}px`,
+                fontWeight: 800,
+                marginTop: 0,
+                whiteSpace: 'nowrap',
+                width: '100%',
+                textAlign: 'center',
+              }}
               className="name"
             >{player.name.toUpperCase()}</p>
             <StatDisplay player={player} />
