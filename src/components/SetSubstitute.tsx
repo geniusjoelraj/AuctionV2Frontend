@@ -9,7 +9,7 @@ export default function SetSubstitute({ players, setSetTeam }: { players: Transa
   return (
     <div className="container mx-auto py-10">
       <SubstituteDataTable columns={substituteColumn} data={data} />
-      <Button onClick={() => setSetTeam(false)}>Back to teams</Button>
+      <Button onClick={() => setSetTeam(false)} className="mt-5">Back to teams</Button>
     </div>
   )
 }

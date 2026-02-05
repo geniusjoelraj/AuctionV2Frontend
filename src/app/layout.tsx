@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Orbitron } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
-import Header from "@/components/Header";
 
 const inter = Inter({
   variable: "--font-inter"
+})
+
+const orbitron = Orbitron({
+  variable: "--font-orbitron"
 })
 
 export const metadata: Metadata = {
@@ -21,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} font-sans antialiased`}
+        className={`${inter.variable} ${orbitron.variable} font-sans antialiased`}
       >
         <ThemeProvider
           attribute="class"

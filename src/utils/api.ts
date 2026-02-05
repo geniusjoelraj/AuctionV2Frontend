@@ -240,4 +240,3 @@ export const fetchSoldPlayers = async (gameId: number): Promise<Player[]> => {
     throw error;
   }
 };
-

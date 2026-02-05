@@ -43,6 +43,7 @@ export function MasterDataTable<TData extends Transaction, TValue>({
 
   const finalizeTeam = () => {
 
+
   }
 
 

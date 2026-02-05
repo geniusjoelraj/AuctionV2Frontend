@@ -1,11 +1,4 @@
-import { Inter } from "next/font/google";
-import { ThemeProvider } from "next-themes";
 import Header from "@/components/Header";
-
-const inter = Inter({
-  variable: "--font-inter"
-})
-
 
 export default function RootLayout({
   children,
@@ -13,7 +6,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <section>
+    <section className="p-5">
+      <Header />
       {children}
     </section>
   );

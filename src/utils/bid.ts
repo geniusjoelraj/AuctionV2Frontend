@@ -120,4 +120,5 @@ export function substituteCheck(subplayers: Transaction[], allPlayers: Transacti
 
   setMessage('Team is valid! Ready to proceed?');
   setIsValid(true);
+  return filPlayers
 }

@@ -15,7 +15,7 @@ function Login() {
       <Card className='z-1 w-full border-none shadow-md sm:max-w-lg'>
         <CardHeader className='gap-6'>
           <div>
-            <CardTitle className='text-2xl'>Log In</CardTitle>
+            <CardTitle className='text-2xl text-center'>Welcome to <span className='text-violet-500 font-semibold text-4xl block text-nowrap'>Grand Theft Auction</span> </CardTitle>
             {/* <CardDescription className='text-base'></CardDescription> */}
           </div>
         </CardHeader>

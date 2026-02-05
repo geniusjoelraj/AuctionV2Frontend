@@ -1,58 +1,57 @@
 'use client'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useRouter } from "next/navigation"
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogMedia,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { LogOut } from "lucide-react"
 import { Button } from "./ui/button"
-import { Dialog, DialogTrigger } from "@radix-ui/react-dialog"
-import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog"
+import { useEffect, useState } from "react"
 export default function Header() {
   const router = useRouter()
-  function confirmLogout() {
-  }
   function logOut() {
     localStorage.clear()
     router.push('/')
   }
+  const [team, setTeam] = useState<string | null>(null)
+  useEffect(() => {
+    const teamName = localStorage.getItem('teamName')
+    setTeam(teamName)
+  }, [])
   return (
-    <div className="w-svw flex justify-between mt-3 px-5">
-      {/* <Tabs defaultValue="account" className="w-full flex items-center justify-center mt-5 "> */}
-      {/*   <TabsList> */}
-      {/*     <TabsTrigger value="game" onClick={() => router.push('/admin/view')}>Game View</TabsTrigger> */}
-      {/*     <TabsTrigger value="team" onClick={() => router.push('/admin/team')}>Team View</TabsTrigger> */}
-      {/*   </TabsList> */}
-      {/*   <TabsContent value="game"></TabsContent> */}
-      {/*   <TabsContent value="team"></TabsContent> */}
-      {/* </Tabs> */}
-      <Tabs defaultValue="account" className="w-100">
-        <TabsList>
-          <TabsTrigger value="teams" onClick={() => router.push('/admin/team')}>Teams</TabsTrigger>
-          <TabsTrigger value="players" onClick={() => router.push('/admin/players')}>Players</TabsTrigger>
-        </TabsList>
-      </Tabs>
-      <HoverCard>
-        <HoverCardTrigger>
-          <Avatar className="mr-5">
-            <AvatarImage src='/user.png' />
-          </Avatar>
-        </HoverCardTrigger>
-        <HoverCardContent className="w-fit">
-          <Dialog>
-            <DialogTrigger>
-              <div >Log out</div>
-            </DialogTrigger>
-
-            <DialogContent showCloseButton={true} className="w-56">
-              <DialogHeader>
-                <DialogTitle className="mb-3">Comfirm?</DialogTitle>
-                <DialogDescription>
-                  <Button variant='destructive' onClick={logOut}>logout</Button>
-                </DialogDescription>
-              </DialogHeader>
-            </DialogContent>
-          </Dialog>
-        </HoverCardContent>
-      </HoverCard>
-    </div>
+    <>
+      <div className="flex justify-between">
+        <p className="text-2xl font-mono font-semibold text-violet-500">Grant Theft Auction</p>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="destructive">Logout</Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent size="sm">
+            <AlertDialogHeader>
+              <AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
+                <LogOut />
+              </AlertDialogMedia>
+              <AlertDialogTitle>Log out?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you wanna log out?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel variant="outline">Cancel</AlertDialogCancel>
+              <AlertDialogAction variant="destructive" onClick={logOut}>Confirm</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
+      <p className="text-xl font-semibold">Hello, {team}</p>
+    </>
   )
 }

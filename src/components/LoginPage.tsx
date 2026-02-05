@@ -62,7 +62,16 @@ const LoginForm = ({ isAdmin }: { isAdmin: boolean }) => {
       const valid = await gameExists(gameId)
       if (!valid) return false
       return true
+    }
 
+    if (username === 'host') {
+      if (password !== 'gta6') {
+        toast.error('Incorrect password')
+        return false
+      }
+      const valid = await gameExists(gameId)
+      if (!valid) return false
+      return true
     }
 
     if (!teams.includes(username)) {
@@ -88,6 +97,10 @@ const LoginForm = ({ isAdmin }: { isAdmin: boolean }) => {
       router.push('/team/view')
     }
     if (isAuthenticated && selectedTeam === 'admin') {
+      localStorage.setItem('teamName', selectedTeam)
+      router.push('/admin/team')
+    }
+    if (isAuthenticated && selectedTeam === 'host') {
       localStorage.setItem('teamName', selectedTeam)
       router.push('/host/view')
     }

@@ -91,7 +91,7 @@ export default function GameLogs() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {currentLogs?.map((log, index) => (
+          {currentLogs?.length! > 0 ? currentLogs?.map((log, index) => (
             <TableRow key={index}>
               <TableCell>{log.playerName}</TableCell>
               <TableCell>{log.team}</TableCell>
@@ -99,7 +99,13 @@ export default function GameLogs() {
               <TableCell>{formatNumber(log.amount)}</TableCell>
               <TableCell className="text-right">{(new Date(log.time)).toLocaleTimeString()}</TableCell>
             </TableRow>
-          ))}
+          )) :
+            <TableRow>
+              <TableCell colSpan={5} className="h-24 text-center">
+                No results.
+              </TableCell>
+            </TableRow>
+          }
         </TableBody>
       </Table>
 

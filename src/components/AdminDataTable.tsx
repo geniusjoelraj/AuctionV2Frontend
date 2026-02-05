@@ -10,6 +10,12 @@ import GameLogs from "./GameLogs";
 import { useHotkeys } from "react-hotkeys-hook";
 import AdminControls from "./AdminControls";
 
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable"
+
 export function AdminDataTable() {
   const router = useRouter()
   const [data, setData] = useState<any>();
@@ -47,8 +53,8 @@ export function AdminDataTable() {
 
   return (
     <>
-      <div className="flex p-5 gap-5 h-full items-start">
-        <div className="flex-1/2 flex flex-col gap-5 justify-center items-center">
+      <ResizablePanelGroup orientation="horizontal">
+        <ResizablePanel>
           <Tabs defaultValue="CSK" className="">
             <TabsList variant='line'>
               {teams.map((team) => (
@@ -58,9 +64,12 @@ export function AdminDataTable() {
           </Tabs>
           <DataTableWrapper teamName={curTeam} key={curTeam} />
           <AdminControls />
-        </div>
-        <div className="flex-1/2"><GameLogs /> </div>
-      </div>
+        </ResizablePanel>
+        <ResizableHandle />
+        <ResizablePanel>
+          <GameLogs />
+        </ResizablePanel>
+      </ResizablePanelGroup>
     </>
   )
 }
