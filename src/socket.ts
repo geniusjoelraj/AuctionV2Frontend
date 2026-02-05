@@ -33,7 +33,6 @@ class SocketService {
         console.log("✅ Connected to STOMP");
         this.connectionStatus = 'connected';
 
-        // Process any pending subscriptions
         this.processPendingSubscriptions();
 
         onConnected?.(frame);
@@ -70,7 +69,6 @@ class SocketService {
   }
 
   subscribe(topic: string, callback: (payload: any) => void): StompSubscription | null {
-    // If not connected yet, queue the subscription
     if (this.connectionStatus !== 'connected') {
       console.warn(`Connection not ready. Queuing subscription to ${topic}`);
       this.pendingSubscriptions.push({ topic, callback });
@@ -82,7 +80,6 @@ class SocketService {
       return null;
     }
 
-    // Prevent duplicate subscriptions
     if (this.subscriptions.has(topic)) {
       console.warn(`Already subscribed to ${topic}`);
       return this.subscriptions.get(topic)!;

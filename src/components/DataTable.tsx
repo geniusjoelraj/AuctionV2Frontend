@@ -17,6 +17,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./
 import { getGame } from "@/utils/api"
 import { Button } from "./ui/button"
 import SetSubstitute from "./SetSubstitute"
+import { FiDownload } from 'react-icons/fi'
+import { useRouter } from "next/navigation"
 
 
 export function DataTable({ players, teamDetails, teamName }: { players: Array<Transaction>, teamDetails: TeamDetails, teamName: string }) {
@@ -25,7 +27,9 @@ export function DataTable({ players, teamDetails, teamName }: { players: Array<T
   const [bid, setBid] = useState(0)
   const [gameDetails, setGameDetails] = useState<NewGame>()
   const [teamComplete, setTeamComplete] = useState(false)
+  const [setTeam, setSetTeam] = useState(false)
   const isAdmin = localStorage.getItem('teamName') === 'admin';
+  const router = useRouter()
   useEffect(() => {
     getGame(parseInt(localStorage.getItem('game')!)).then((game) => {
       if (game) {
@@ -41,9 +45,6 @@ export function DataTable({ players, teamDetails, teamName }: { players: Array<T
       setTeamComplete(false)
     }
   })
-  const setSubstitute = () => {
-    setTeamComplete(true)
-  }
 
 
   useEffect(() => {
@@ -77,23 +78,23 @@ export function DataTable({ players, teamDetails, teamName }: { players: Array<T
       };
     });
   }, [teamName]);
-  const validTeam: Transaction[] = [
-    { name: "Virat Kohli", playerType: "BATSMAN", boughtFor: 15000000, points: 95, isForeign: false, isLegend: true, isUncapped: false },
-    { name: "Steve Smith", playerType: "BATSMAN", boughtFor: 12000000, points: 92, isForeign: true, isLegend: false, isUncapped: false },
-    { name: "Joe Root", playerType: "BATSMAN", boughtFor: 10000000, points: 90, isForeign: true, isLegend: false, isUncapped: false },
-    { name: "Kane Williamson", playerType: "BATSMAN", boughtFor: 11000000, points: 91, isForeign: true, isLegend: false, isUncapped: false },
-    { name: "Jasprit Bumrah", playerType: "BOWLER", boughtFor: 12000000, points: 94, isForeign: false, isLegend: false, isUncapped: false },
-    { name: "Pat Cummins", playerType: "BOWLER", boughtFor: 13000000, points: 93, isForeign: true, isLegend: false, isUncapped: false },
-    { name: "Kagiso Rabada", playerType: "BOWLER", boughtFor: 9000000, points: 89, isForeign: true, isLegend: false, isUncapped: false },
-    { name: "Trent Boult", playerType: "BOWLER", boughtFor: 8000000, points: 88, isForeign: true, isLegend: false, isUncapped: false },
-    { name: "Hardik Pandya", playerType: "ALL_ROUNDER", boughtFor: 14000000, points: 90, isForeign: false, isLegend: false, isUncapped: false },
-    { name: "Ben Stokes", playerType: "ALL_ROUNDER", boughtFor: 16000000, points: 94, isForeign: true, isLegend: false, isUncapped: false },
-    { name: "Ravindra Jadeja", playerType: "ALL_ROUNDER", boughtFor: 10000000, points: 89, isForeign: false, isLegend: false, isUncapped: false },
-    { name: "MS Dhoni", playerType: "WICKET_KEEPER", boughtFor: 12000000, points: 88, isForeign: false, isLegend: false, isUncapped: false },
-    { name: "Prithvi Shaw", playerType: "BATSMAN", boughtFor: 2000000, points: 75, isForeign: false, isLegend: false, isUncapped: true },
-    { name: "Arshdeep Singh", playerType: "BOWLER", boughtFor: 1500000, points: 72, isForeign: false, isLegend: false, isUncapped: false },
-    { name: "Shubman Gill", playerType: "BATSMAN", boughtFor: 8000000, points: 85, isForeign: false, isLegend: true, isUncapped: false }
-  ];
+  // const validTeam: Transaction[] = [
+  //   { name: "Virat Kohli", playerType: "BATSMAN", boughtFor: 15000000, points: 95, isForeign: false, isLegend: true, isUncapped: false },
+  //   { name: "Steve Smith", playerType: "BATSMAN", boughtFor: 12000000, points: 92, isForeign: true, isLegend: false, isUncapped: false },
+  //   { name: "Joe Root", playerType: "BATSMAN", boughtFor: 10000000, points: 90, isForeign: true, isLegend: false, isUncapped: false },
+  //   { name: "Kane Williamson", playerType: "BATSMAN", boughtFor: 11000000, points: 91, isForeign: true, isLegend: false, isUncapped: false },
+  //   { name: "Jasprit Bumrah", playerType: "BOWLER", boughtFor: 12000000, points: 94, isForeign: false, isLegend: false, isUncapped: false },
+  //   { name: "Pat Cummins", playerType: "BOWLER", boughtFor: 13000000, points: 93, isForeign: true, isLegend: false, isUncapped: false },
+  //   { name: "Kagiso Rabada", playerType: "BOWLER", boughtFor: 9000000, points: 89, isForeign: true, isLegend: false, isUncapped: false },
+  //   { name: "Trent Boult", playerType: "BOWLER", boughtFor: 8000000, points: 88, isForeign: true, isLegend: false, isUncapped: false },
+  //   { name: "Hardik Pandya", playerType: "ALL_ROUNDER", boughtFor: 14000000, points: 90, isForeign: false, isLegend: false, isUncapped: false },
+  //   { name: "Ben Stokes", playerType: "ALL_ROUNDER", boughtFor: 16000000, points: 94, isForeign: true, isLegend: false, isUncapped: false },
+  //   { name: "Ravindra Jadeja", playerType: "ALL_ROUNDER", boughtFor: 10000000, points: 89, isForeign: false, isLegend: false, isUncapped: false },
+  //   { name: "MS Dhoni", playerType: "WICKET_KEEPER", boughtFor: 12000000, points: 88, isForeign: false, isLegend: false, isUncapped: false },
+  //   { name: "Prithvi Shaw", playerType: "BATSMAN", boughtFor: 2000000, points: 75, isForeign: false, isLegend: false, isUncapped: true },
+  //   { name: "Arshdeep Singh", playerType: "BOWLER", boughtFor: 1500000, points: 72, isForeign: false, isLegend: false, isUncapped: false },
+  //   { name: "Shubman Gill", playerType: "BATSMAN", boughtFor: 8000000, points: 85, isForeign: false, isLegend: true, isUncapped: false }
+  // ];
 
   return (
     <>
@@ -102,66 +103,70 @@ export function DataTable({ players, teamDetails, teamName }: { players: Array<T
         :
         <></>
       }
-      <Table>
-        {/* <TableCaption>The list of players you have purchased</TableCaption> */}
-        <TableHeader>
-          <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Type</TableHead>
-            <TableHead>Tags</TableHead>
-            <TableHead>Points</TableHead>
-            <TableHead className="text-right">Price</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {playersData.map((player) => (
-            <TableRow key={player.name} >
-              <TableCell>{player.name}</TableCell>
-              <TableCell>{player.playerType}</TableCell>
-              <TableCell>
-                {player.isUncapped && <Badge variant="default">uncapped</Badge>}
-                {player.isForeign && <Badge variant="secondary">foreign</Badge>}
-                {player.isLegend && <Badge variant="destructive" style={{ background: "linear-gradient(135deg, #E5CD6D 0%, #B47B11 100%)" }}>legend</Badge>}
-              </TableCell>
-              <TableCell>{player.points}</TableCell>
-              <TableCell className="text-right">{formatNumber(player.boughtFor)}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell colSpan={3}>Total</TableCell>
-            <TableCell>{playersData.reduce((acc, curr) => acc + curr.points, 0)}</TableCell>
-            <TableCell className="text-right">{formatNumber(playersData.reduce((acc, curr) => acc + curr.boughtFor, 0))}</TableCell>
-          </TableRow>
-        </TableFooter>
-      </Table>
-      <Accordion type="single" collapsible className="w-full">
-        <AccordionItem value="item-1">
-          <AccordionTrigger>Additional details</AccordionTrigger>
-          <AccordionContent>
-            <div className="grid grid-cols-2 gap-4 p-4 rounded-xl shadow-sm ">
-              <div className="p-2 border-b">Balance: <span className="font-bold text-green-500">₹{formatNumber(team.balance)}</span></div>
-              <div className="p-2 border-b">Spent: <span className="font-bold text-red-500">₹{formatNumber((gameDetails?.initialBalance || 0) - team.balance)}</span></div>
+      {!setTeam ?
+        <div className="">
+          <Table>
+            {/* <TableCaption>The list of players you have purchased</TableCaption> */}
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Type</TableHead>
+                <TableHead>Tags</TableHead>
+                <TableHead>Points</TableHead>
+                <TableHead className="text-right">Price</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {playersData.map((player) => (
+                <TableRow key={player.name} >
+                  <TableCell>{player.name}<FiDownload className="inline ml-3" onClick={() => router.push(`/card/preview?name=${player.name}`)} /> </TableCell>
+                  <TableCell>{player.playerType}</TableCell>
+                  <TableCell>
+                    {player.isUncapped && <Badge variant="default">uncapped</Badge>}
+                    {player.isForeign && <Badge variant="secondary">foreign</Badge>}
+                    {player.isLegend && <Badge variant="destructive" style={{ background: "linear-gradient(135deg, #E5CD6D 0%, #B47B11 100%)" }}>legend</Badge>}
+                  </TableCell>
+                  <TableCell>{player.points}</TableCell>
+                  <TableCell className="text-right">{formatNumber(player.boughtFor)}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TableCell colSpan={3}>Total</TableCell>
+                <TableCell>{playersData.reduce((acc, curr) => acc + curr.points, 0)}</TableCell>
+                <TableCell className="text-right">{formatNumber(playersData.reduce((acc, curr) => acc + curr.boughtFor, 0))}</TableCell>
+              </TableRow>
+            </TableFooter>
+          </Table>
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="item-1">
+              <AccordionTrigger>Additional details</AccordionTrigger>
+              <AccordionContent>
+                <div className="grid grid-cols-2 gap-4 p-4 rounded-xl shadow-sm ">
+                  <div className="p-2 border-b">Balance: <span className="font-bold text-green-500">₹{formatNumber(team.balance)}</span></div>
+                  <div className="p-2 border-b">Spent: <span className="font-bold text-red-500">₹{formatNumber((gameDetails?.initialBalance || 0) - team.balance)}</span></div>
 
-              <div className="p-2 border-b">Total Points: <span className="font-bold text-yellow-500">{team.points}</span></div>
-              <div className="p-2 border-b">All Rounders: <span className="font-bold">{team.allRounderCount}/{gameDetails?.allRounderPerTeam}</span></div>
+                  <div className="p-2 border-b">Total Points: <span className="font-bold text-yellow-500">{team.points}</span></div>
+                  <div className="p-2 border-b">All Rounders: <span className="font-bold">{team.allRounderCount}/{gameDetails?.allRounderPerTeam}</span></div>
 
-              <div className="p-2 border-b">Batsman: <span className="font-bold">{team.batsmanCount}/{gameDetails?.batsmenPerTeam}</span></div>
-              <div className="p-2 border-b">Bowler: <span className="font-bold">{team.bowlerCount}/{gameDetails?.bowlersPerTeam}</span></div>
+                  <div className="p-2 border-b">Batsman: <span className="font-bold">{team.batsmanCount}/{gameDetails?.batsmenPerTeam}</span></div>
+                  <div className="p-2 border-b">Bowler: <span className="font-bold">{team.bowlerCount}/{gameDetails?.bowlersPerTeam}</span></div>
 
-              <div className="p-2 border-b">Uncapped: <span className="font-bold">{team.uncappedCount}/{gameDetails?.unCappedPerTeam}</span></div>
-              <div className="p-2 border-b">Legends: <span className="font-bold">{team.legendsCount}/{gameDetails?.legendsPerTeam}</span></div>
+                  <div className="p-2 border-b">Uncapped: <span className="font-bold">{team.uncappedCount}/{gameDetails?.unCappedPerTeam}</span></div>
+                  <div className="p-2 border-b">Legends: <span className="font-bold">{team.legendsCount}/{gameDetails?.legendsPerTeam}</span></div>
 
-              <div className="p-2">Wicket Keeper: <span className="font-bold">{team.wicketKeeperCount}/{gameDetails?.wicketKeeperPerTeam}</span></div>
-              <div className="p-2">Player Count: <span className="font-bold">{team.playerCount}/{gameDetails?.playersPerTeam}</span></div>
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
-      <Button className={!teamComplete || isAdmin ? 'hidden' : ''} onClick={setSubstitute}>Set Team</Button>
-      {teamComplete && !isAdmin ? <SetSubstitute players={validTeam} /> : <></>}
-
+                  <div className="p-2">Wicket Keeper: <span className="font-bold">{team.wicketKeeperCount}/{gameDetails?.wicketKeeperPerTeam}</span></div>
+                  <div className="p-2">Player Count: <span className="font-bold">{team.playerCount}/{gameDetails?.playersPerTeam}</span></div>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+          <Button className={!teamComplete || isAdmin ? 'hidden' : ''} onClick={() => setSetTeam(true)}>Set Team</Button>
+        </div>
+        :
+        <SetSubstitute players={players} setSetTeam={setSetTeam} />
+      }
     </>
   )
 }

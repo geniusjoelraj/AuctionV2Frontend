@@ -14,7 +14,6 @@ export default function RootLayout({
 }>) {
   return (
     <section>
-      <Header />
       {children}
     </section>
   );

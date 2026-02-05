@@ -20,6 +20,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination"
 import { formatNumber } from "@/utils/bid"
+import { socketService } from "@/socket"
 
 export default function GameLogs() {
   const [logs, setLogs] = useState<GameLog[]>()
@@ -29,15 +30,25 @@ export default function GameLogs() {
   useEffect(() => {
     const gameId = localStorage.getItem('game')
     getLogs(parseInt(gameId!)).then((res) => setLogs(res))
+
+    let subLogs: any
+    socketService.connect(() => {
+      subLogs = socketService.subscribe(
+        `/topic/game/${gameId}/audit`,
+        (data) => setLogs(prev => [data.payload, ...prev!])
+      );
+    });
+
+    return () => {
+      subLogs?.unsubscribe();
+    };
   }, [])
 
-  // Calculate pagination
   const totalPages = logs ? Math.ceil(logs.length / itemsPerPage) : 0
   const startIndex = (currentPage - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
   const currentLogs = logs?.slice(startIndex, endIndex)
 
-  // Generate page numbers to display
   const getPageNumbers = () => {
     const pages = []
     const maxPagesToShow = 5
@@ -80,13 +91,13 @@ export default function GameLogs() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {currentLogs?.map((log) => (
-            <TableRow key={log.time}>
+          {currentLogs?.map((log, index) => (
+            <TableRow key={index}>
               <TableCell>{log.playerName}</TableCell>
               <TableCell>{log.team}</TableCell>
               <TableCell className={log.transactionType === 'REFUND' ? `text-red-400` : 'text-green-400'}>{log.transactionType}</TableCell>
               <TableCell>{formatNumber(log.amount)}</TableCell>
-              <TableCell className="text-right">{log.time}</TableCell>
+              <TableCell className="text-right">{(new Date(log.time)).toLocaleTimeString()}</TableCell>
             </TableRow>
           ))}
         </TableBody>

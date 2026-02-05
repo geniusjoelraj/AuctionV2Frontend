@@ -212,3 +212,32 @@ export const startGame = async (gameId: number) => {
     console.log("Failed to start game", err);
   }
 }
+export const fetchUnsoldPlayers = async (gameId: number): Promise<Player[]> => {
+  try {
+    const response = await fetch(`${BASE_URL}/game/${gameId}/players/unsold`);
+    if (!response.ok) {
+      throw new Error(`Error fetching players: ${response.statusText}`);
+    }
+    const data: Player[] = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch players:", error);
+    throw error;
+  }
+};
+
+
+export const fetchSoldPlayers = async (gameId: number): Promise<Player[]> => {
+  try {
+    const response = await fetch(`${BASE_URL}/game/${gameId}/players/sold`);
+    if (!response.ok) {
+      throw new Error(`Error fetching players: ${response.statusText}`);
+    }
+    const data: Player[] = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch players:", error);
+    throw error;
+  }
+};
+

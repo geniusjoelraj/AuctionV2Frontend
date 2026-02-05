@@ -1,3 +1,4 @@
+'use client'
 import { Player } from "@/types/api";
 import StatDisplay from "@/components/StatDisplay";
 import { domToPng } from "modern-screenshot";

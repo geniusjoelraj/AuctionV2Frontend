@@ -19,14 +19,14 @@ import React, { useEffect, useState } from "react"
 import { substituteCheck } from "@/utils/bid"
 import { Transaction } from "@/types/api"
 import { Button } from "./ui/button"
-import { toast, ToastContainer } from "react-toastify"
+import { ToastContainer } from "react-toastify"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
 }
 
-export function SubstituteDataTable<TData extends Transaction, TValue>({
+export function MasterDataTable<TData extends Transaction, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -80,8 +80,6 @@ export function SubstituteDataTable<TData extends Transaction, TValue>({
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
-                onClick={() => row.toggleSelected()}
-                className="cursor-pointer"
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>

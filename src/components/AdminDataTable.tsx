@@ -7,6 +7,8 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { teams } from "@/utils/constants";
 import { DataTableWrapper } from "./DataTableWrapper";
 import GameLogs from "./GameLogs";
+import { useHotkeys } from "react-hotkeys-hook";
+import AdminControls from "./AdminControls";
 
 export function AdminDataTable() {
   const router = useRouter()
@@ -28,6 +30,17 @@ export function AdminDataTable() {
     }
 
   }, []);
+  // useHotkeys('1', () => setCurTeam(teams[0]));
+  // useHotkeys('2', () => setCurTeam(teams[1]));
+  // useHotkeys('3', () => setCurTeam(teams[2]));
+  // useHotkeys('4', () => setCurTeam(teams[3]));
+  // useHotkeys('5', () => setCurTeam(teams[4]));
+  // useHotkeys('6', () => setCurTeam(teams[5]));
+  // useHotkeys('7', () => setCurTeam(teams[6]));
+  // useHotkeys('8', () => setCurTeam(teams[7]));
+  // useHotkeys('9', () => setCurTeam(teams[8]));
+  // useHotkeys('0', () => setCurTeam(teams[9]));
+
 
   if (!data) return <div>Loading...</div>;
 
@@ -44,6 +57,7 @@ export function AdminDataTable() {
             </TabsList>
           </Tabs>
           <DataTableWrapper teamName={curTeam} key={curTeam} />
+          <AdminControls />
         </div>
         <div className="flex-1/2"><GameLogs /> </div>
       </div>
