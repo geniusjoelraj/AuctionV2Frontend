@@ -39,7 +39,7 @@ export function DataTable({ players, teamDetails, teamName }: { players: Array<T
   }, [])
 
   useEffect(() => {
-    if (playersData.length === gameDetails?.playersPerTeam) {
+    if (playersData.length === gameDetails?.maxPlayersPerTeam) {
       setTeamComplete(true)
     } else {
       setTeamComplete(false)
@@ -144,11 +144,19 @@ export function DataTable({ players, teamDetails, teamName }: { players: Array<T
                 ))}
               </TableBody>
               <TableFooter>
-                <TableRow>
-                  <TableCell colSpan={3}>Total</TableCell>
-                  <TableCell>{playersData.reduce((acc, curr) => acc + curr.points, 0)}</TableCell>
-                  <TableCell className="text-right">{formatNumber(playersData.reduce((acc, curr) => acc + curr.boughtFor, 0))}</TableCell>
-                </TableRow>
+                {playersData.length > 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={3}>Total</TableCell>
+                    <TableCell>{playersData.reduce((acc, curr) => acc + curr.points, 0)}</TableCell>
+                    <TableCell className="text-right">{formatNumber(playersData.reduce((acc, curr) => acc + curr.boughtFor, 0))}</TableCell>
+                  </TableRow>)
+                  :
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center">
+                      No Players.
+                    </TableCell>
+                  </TableRow>
+                }
               </TableFooter>
             </Table>
             <Accordion type="single" collapsible className="flex-1/2" defaultValue="item-1">
@@ -166,7 +174,7 @@ export function DataTable({ players, teamDetails, teamName }: { players: Array<T
                     <div className="p-2 border-b">Bowler: <span className="font-bold">{team.bowlerCount}/{gameDetails?.bowlersPerTeam}</span></div>
 
                     <div className="p-2 border-b">Uncapped: <span className="font-bold">{team.uncappedCount}/{gameDetails?.unCappedPerTeam}</span></div>
-                    <div className="p-2 border-b">Legends: <span className="font-bold">{team.legendsCount}/{gameDetails?.legendsPerTeam}</span></div>
+                    <div className="p-2 border-b">Legends: <span className="font-bold">{team.legendCount}/{gameDetails?.legendsPerTeam}</span></div>
 
                     <div className="p-2">Wicket Keeper: <span className="font-bold">{team.wicketKeeperCount}/{gameDetails?.wicketKeeperPerTeam}</span></div>
                     <div className="p-2">Player Count: <span className="font-bold">{team.playerCount}/{gameDetails?.playersPerTeam}</span></div>

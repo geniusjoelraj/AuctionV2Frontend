@@ -40,6 +40,7 @@ export interface Player {
   allRounderStats: AllRounderStats | null;
   setId: number;
   isUncapped: boolean;
+  isForeign: boolean;
   isLegend: boolean;
   country: string;
   status: "FOR_SALE" | "SOLD";
@@ -70,7 +71,10 @@ export type TeamDetails = {
   "batsmanCount": number;
   "bowlerCount": number;
   "wicketKeeperCount": number;
-  "legendsCount": number;
+  "legendCount": number;
+  "specialCount": number;
+  "foreignCount": number;
+  "isQUalified": boolean;
   "uncappedCount": number;
 }
 
@@ -84,12 +88,15 @@ export type NewGame = {
   "allRounderPerTeam": number;
   "wicketKeeperPerTeam": number;
   "legendsPerTeam": number;
+  "specialPlayersPerTeam": number;
+  "maxPlayersPerTeam": number;
+  "foreignPlayersPerTeam": number;
   "unCappedPerTeam": number;
 }
 
 export type Game = NewGame &
 {
-  "status": "ACTIVE" | "INACTIVE",
+  "status": "ACTIVE" | "INACTIVE" | "FINALIZED" | "ENDED",
   id: number
 }
 

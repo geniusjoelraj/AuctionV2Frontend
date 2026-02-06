@@ -18,6 +18,20 @@ export const fetchPlayers = async (gameId: number): Promise<Player[]> => {
   }
 };
 
+export const fetchPlayer = async (gameId: number, name: string): Promise<Player> => {
+  try {
+    const response = await fetch(`${BASE_URL}/game/${gameId}/player/${name}`);
+    if (!response.ok) {
+      throw new Error(`Error fetching players: ${response.statusText}`);
+    }
+    const data: Player = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch players:", error);
+    throw error;
+  }
+};
+
 export const fetchTeamPlayers = async (team: string, gameId: number): Promise<Transaction[]> => {
   try {
     const response = await fetch(`${BASE_URL}/game/${gameId}/team/${team}/purchases`);

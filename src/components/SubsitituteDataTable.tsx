@@ -34,7 +34,7 @@ export function SubstituteDataTable<TData extends Transaction, TValue>({
 
   const [message, setMessage] = useState<string>('')
   const [isValid, setIsValid] = useState(true)
-  const [teamFinal, setTeamFinal] = useState(true)
+  const [teamFinal, setTeamFinal] = useState(false)
   const table = useReactTable({
     data,
     columns,
@@ -66,7 +66,6 @@ export function SubstituteDataTable<TData extends Transaction, TValue>({
     setTeamPlayers(teamP)
   }
   useEffect(() => {
-
     finalizeTeam()
   }, [])
   useEffect(() => {
@@ -79,7 +78,7 @@ export function SubstituteDataTable<TData extends Transaction, TValue>({
   }
   return (
     <>
-      {teamFinal ?
+      {!teamFinal ?
         <div className="h-screen w-screen absolute bg-[url(/field.png)] bg-center bg-cover md:bg-contain bg-no-repeat bg-black top-0 left-0 flex items-center flex-col gap-5 p-4 justify-center text-sm font-semibold">
           <div className="flex flex-col items-center">
             WICKET KEEPERS

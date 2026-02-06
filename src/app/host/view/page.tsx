@@ -48,7 +48,7 @@ export default function PlayerGallery() {
   useHotkeys('left', () => prev())
 
   useEffect(() => {
-    if (localStorage.getItem('teamName') !== 'admin') {
+    if (localStorage.getItem('teamName') !== 'host') {
       router.push('/')
     }
   })
@@ -126,12 +126,12 @@ export default function PlayerGallery() {
       <div className="flex items-center justify-around w-full">
         {currentPlayer ? (
           <>
-            <PlayerCard player={currentPlayer} />
+            <PlayerCard player={currentPlayer} downloadable={false} />
             <Bid currentBid={currentBid ?? currentPlayer.price} setCurrentBid={setCurrentBid} />
             <Bidder player={currentPlayer} finalBid={currentBid} />
           </>
         ) : (
-          <PlayerCard player="EMPTY" />
+          <PlayerCard player="EMPTY" downloadable={false} />
         )}
 
         <div className="absolute bottom-10 flex w-11/12 justify-between hidden">

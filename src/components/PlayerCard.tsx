@@ -5,10 +5,11 @@ import { domToPng } from "modern-screenshot";
 import '../style.css'
 import { useRef, useEffect, useState } from "react";
 import { formatNumber } from "@/utils/bid";
+import { Download } from "lucide-react";
 
 const proxyUrl = (url: string) => `/api/image-proxy?url=${encodeURIComponent(url)}`;
 
-export default function PlayerCard({ player }: { player: Player | "EMPTY" }) {
+export default function PlayerCard({ player, downloadable }: { player: Player | "EMPTY", downloadable: boolean }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const nameRef = useRef<HTMLParagraphElement>(null);
   const [nameFontSize, setNameFontSize] = useState(28);
@@ -183,10 +184,14 @@ export default function PlayerCard({ player }: { player: Player | "EMPTY" }) {
             strokeLinejoin="round"
           />
         </svg>
+        {downloadable &&
+          <button
+            onClick={handleDownload}
+            style={{ marginTop: '10px', color: 'white', padding: '10px', position: 'absolute', textAlign: 'center', fontSize: '1.5rem', background: '', fontFamily: 'monospace', display: 'flex', gap: '10px', border: 'solid #0B2782 2px', borderRadius: '10px', right: '20%', backgroundColor: '#0B2782' }}>
+            Download<Download size={30} style={{ display: 'inline' }} />
+          </button>
+        }
       </div>
-      {/* <button onClick={handleDownload} style={{ marginTop: '10px', color: 'white', padding: '10px', borderRadius: 5, position: 'absolute', top: 5, left: 5 }}> */}
-      {/*   download */}
-      {/* </button> */}
     </>
   );
 }
