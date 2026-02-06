@@ -20,6 +20,7 @@ import { formatNumber, substituteCheck } from "@/utils/bid"
 import { Transaction } from "@/types/api"
 import { Button } from "./ui/button"
 import { toast, ToastContainer } from "react-toastify"
+import { finalizeGame, LockInSelection } from "@/utils/api"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -35,6 +36,8 @@ export function SubstituteDataTable<TData extends Transaction, TValue>({
   const [message, setMessage] = useState<string>('')
   const [isValid, setIsValid] = useState(true)
   const [teamFinal, setTeamFinal] = useState(false)
+  const [gameId, setGameId] = useState<number>()
+  const [teamName, setTeamName] = useState<string>('')
   const table = useReactTable({
     data,
     columns,
@@ -53,8 +56,9 @@ export function SubstituteDataTable<TData extends Transaction, TValue>({
   const [bowlers, setBowlers] = useState<Transaction[]>()
   const [allRounders, setALlRounders] = useState<Transaction[]>()
   const finalizeTeam = () => {
-    setTeamFinal(true)
     const teamP: Transaction[] = allPlayers.filter((player) => !selectedRowsData.includes(player))
+    const subs = allPlayers.filter((player) => selectedRowsData.includes(player)).map((player) => player.playerId)
+    LockInSelection(gameId!, teamName, subs)
     const keep = teamP?.filter((player) => player.playerType === 'WICKET_KEEPER')
     const bats = teamP?.filter((player) => player.playerType === 'BATSMAN')
     const bowls = teamP?.filter((player) => player.playerType === 'BOWLER')
@@ -64,11 +68,11 @@ export function SubstituteDataTable<TData extends Transaction, TValue>({
     setBowlers(bowls)
     setALlRounders(all)
     setTeamPlayers(teamP)
+    setTeamFinal(true)
   }
   useEffect(() => {
-    finalizeTeam()
-  }, [])
-  useEffect(() => {
+    setGameId(parseInt(localStorage.getItem('game')!))
+    setTeamName(localStorage.getItem('teamName')!)
     substituteCheck(selectedRowsData, allPlayers, setMessage, setIsValid)
   }, [selectedRowsData])
   function shorten(text: string) {
@@ -78,8 +82,10 @@ export function SubstituteDataTable<TData extends Transaction, TValue>({
   }
   return (
     <>
-      {!teamFinal ?
+      {teamFinal ?
         <div className="h-screen w-screen absolute bg-[url(/field.png)] bg-center bg-cover md:bg-contain bg-no-repeat bg-black top-0 left-0 flex items-center flex-col gap-5 p-4 justify-center text-sm font-semibold">
+          <p className="text-2xl">Total Points: {teamPlayers?.reduce((acc, p) => acc + p.points, 0)}</p>
+          <Button>View Results</Button>
           <div className="flex flex-col items-center">
             WICKET KEEPERS
             <div className="flex gap-2">
@@ -137,7 +143,6 @@ export function SubstituteDataTable<TData extends Transaction, TValue>({
               </>
             </div>
           </div>
-
         </div>
         :
         <div className="overflow-hidden rounded-md border">
@@ -145,7 +150,11 @@ export function SubstituteDataTable<TData extends Transaction, TValue>({
             <span>
               {message}
             </span>
-            <Button disabled={!isValid} className={!isValid ? 'text-gray-70 border-2' : ''} variant={isValid ? 'default' : 'ghost'} onClick={finalizeTeam}>
+            <Button
+              disabled={!isValid}
+              className={!isValid ? 'text-gray-70 border-2' : ''}
+              variant={isValid ? 'default' : 'ghost'}
+              onClick={finalizeTeam}>
               Finalize Team
             </Button>
           </div>

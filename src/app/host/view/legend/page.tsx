@@ -1,33 +1,21 @@
 "use client";
 import { useState, useMemo, useEffect } from "react";
-import { Player, PlayerType } from "@/types/api"; import { fetchPlayers, finalizeGame } from '@/utils/api'
+import { Player, PlayerType } from "@/types/api"; import { fetchPlayers } from '@/utils/api'
 import PlayerCard from "@/components/PlayerCard";
 import Bidder from "@/components/Bidder";
 import Bid from "@/components/Bid";
 import { PlayerSearch } from "@/components/PlayerSearch";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useHotkeys } from 'react-hotkeys-hook'
 import CustomIncrement from "@/components/CustomIncrement";
 import Shortcuts from "@/components/Shortcuts";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button";
+
 export default function PlayerGallery() {
   const [players, setPlayers] = useState<Player[]>([]);
   const [filter, setFilter] = useState<PlayerType>("BATSMAN");
-  const [game, setGame] = useState<number>()
   const [playerIndexes, setPlayerIndexes] = useState({
     batsman: 0,
     bowler: 0,
@@ -53,6 +41,7 @@ export default function PlayerGallery() {
     WICKET_KEEPER: 'keeper',
   };
 
+
   useHotkeys('1', () => handleFilterChange('BATSMAN'))
   useHotkeys('2', () => handleFilterChange('BOWLER'))
   useHotkeys('3', () => handleFilterChange('ALL_ROUNDER'))
@@ -67,10 +56,9 @@ export default function PlayerGallery() {
   })
   useEffect(() => {
     const id = parseInt(localStorage.getItem('game')!)
-    setGame(id)
     if (id) {
       fetchPlayers(id).then(data => {
-        setPlayers(data.filter((d) => !d.isLegend));
+        setPlayers(data.filter((d) => d.isLegend));
         setIsLoading(false);
       });
     }
@@ -114,34 +102,12 @@ export default function PlayerGallery() {
     }
   };
 
-  const handleFinalizeGame = () => {
-    finalizeGame(game!)
-    router.push('/host/end')
-  }
-
   if (isLoading) return <div>Loading...</div>;
 
   return (
     <main style={{ backgroundImage: "url('/ipl-stadium-bg.png')" }} className="flex flex-col items-center relative bg-blue-900 h-dvh text-white text-nowrap bg-cover bg-opacity-0 px-20">
-      <div className="flex flex-col items-center relative w-full">
-        <AlertDialog>
-          <AlertDialogTrigger asChild className="absolute left-0 top-5">
-            <Button variant="destructive">End Game</Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone. This will end the game
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleFinalizeGame}>Continue</AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-        <h1 className="text-4xl font-bold mb-6"><img src="/srm-ipl.png" alt="IPL" width={100} className="inline -pr-4" onClick={() => router.push("/host/view/legend")} />Auction</h1>
+      <div className="flex flex-col items-center relative">
+        <h1 className="text-4xl font-bold mb-6 text-violet-500" ><img src="/srm-ipl.png" alt="IPL" width={100} className="inline -pr-4" onClick={() => router.push("/host/view")} />LEGENDS</h1>
 
         <div className="flex gap-4 mb-8">
           {["BATSMAN", "BOWLER", "ALL_ROUNDER", "WICKET_KEEPER"].map((cat) => (

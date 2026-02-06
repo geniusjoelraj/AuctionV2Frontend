@@ -44,10 +44,12 @@ export function substituteCheck(subplayers: Transaction[], allPlayers: Transacti
     }
 
     if (player.isLegend) {
+      acc.special++;
       acc.legend++;
     }
 
     if (player.isUncapped) {
+      acc.special++;
       acc.uncapped++;
     }
 
@@ -61,7 +63,8 @@ export function substituteCheck(subplayers: Transaction[], allPlayers: Transacti
     },
     foreign: 0,
     legend: 0,
-    uncapped: 0
+    uncapped: 0,
+    special: 0
   });
 
   if (subplayers.length < 3) {
@@ -100,8 +103,14 @@ export function substituteCheck(subplayers: Transaction[], allPlayers: Transacti
     return;
   }
 
-  if (playersCount.foreign < 5) {
+  if (playersCount.foreign < 3) {
     setMessage(`Need ${5 - playersCount.foreign} more foreign players (minimum 5 required)`);
+    setIsValid(false);
+    return;
+  }
+
+  if (playersCount.foreign > 4) {
+    setMessage(`Should not have more than 4 foreign players`);
     setIsValid(false);
     return;
   }
@@ -118,6 +127,11 @@ export function substituteCheck(subplayers: Transaction[], allPlayers: Transacti
     return;
   }
 
+  if (playersCount.special < 3) {
+    setMessage('Need 3 special players (uncapped+legend)');
+    setIsValid(false);
+    return;
+  }
   setMessage('Team is valid! Ready to proceed?');
   setIsValid(true);
   return filPlayers

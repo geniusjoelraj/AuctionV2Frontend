@@ -63,11 +63,11 @@ export function AdminDataTable() {
             </TabsList>
           </Tabs>
           <DataTableWrapper teamName={curTeam} key={curTeam} />
-          <AdminControls />
         </ResizablePanel>
         <ResizableHandle />
         <ResizablePanel>
           <GameLogs />
+          <AdminControls />
         </ResizablePanel>
       </ResizablePanelGroup>
     </>

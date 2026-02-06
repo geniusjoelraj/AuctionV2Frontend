@@ -50,6 +50,7 @@ export interface Player {
 }
 
 export type Transaction = {
+  "playerId": number;
   "name": string;
   "playerType": string;
   "boughtFor": number;
@@ -89,7 +90,7 @@ export type NewGame = {
   "wicketKeeperPerTeam": number;
   "legendsPerTeam": number;
   "specialPlayersPerTeam": number;
-  "maxPlayersPerTeam": number;
+  "substitutesPerTeam": number;
   "foreignPlayersPerTeam": number;
   "unCappedPerTeam": number;
 }
@@ -114,3 +115,28 @@ export type GameLog = {
   "playerStatus": "SOLD" | "FOR_SALE"
   "time": string
 }
+
+export type TeamResult = {
+  place: number;
+  teamStats: {
+    id: number;
+    gameId: number;
+    name: string;
+    association: string;
+    balance: number;
+    points: number;
+    playerCount: number;
+    allRounderCount: number;
+    batsmanCount: number;
+    bowlerCount: number;
+    wicketKeeperCount: number;
+    uncappedCount: number;
+    legendCount: number;
+    specialCount: number;
+    foreignCount: number;
+    qualified: boolean;
+  };
+  finalTeam: string[]; // or Player[] if you have a Player type
+  substitutes: string[]; // or Player[] if you have a Player type
+  isQualified: boolean;
+};

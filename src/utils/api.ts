@@ -1,4 +1,4 @@
-import { Game, NewGame, Player, TeamDetails, Transaction } from '@/types/api'
+import { Game, NewGame, Player, TeamDetails, TeamResult, Transaction } from '@/types/api'
 import { toast } from 'react-toastify';
 
 const HOST = process.env.NEXT_PUBLIC_HOST || "localhost"
@@ -254,3 +254,91 @@ export const fetchSoldPlayers = async (gameId: number): Promise<Player[]> => {
     throw error;
   }
 };
+
+// Game End
+
+export const finalizeGame = async (gameId: number) => {
+  try {
+    const response = await fetch(`${BASE_URL}/game/${gameId}/finalize`, {
+      method: 'POST',
+    })
+    if (response.ok) {
+      const res = await response.json()
+      toast.success(res.message)
+    } else {
+      const errorData = await response.json();
+      toast.error(errorData.message)
+    }
+  } catch (err) {
+    console.log("Failed to finalize game", err);
+  }
+}
+
+export const getLockedIn = async (gameId: number) => {
+  try {
+    const response = await fetch(`${BASE_URL}/game/${gameId}/selection/locked-in`);
+    if (!response.ok) {
+      toast.error(response.statusText);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch locked-in:", error);
+    throw error;
+  }
+};
+
+export const LockInSelection = async (gameId: number, teamName: string, substitutes: number[]) => {
+  try {
+    const response = await fetch(`${BASE_URL}/game/${gameId}/selection`, {
+      method: 'POST',
+      body: JSON.stringify({
+        teamAssociation: teamName,
+        substitutes: substitutes
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    if (response.ok) {
+      const res = await response.json()
+      toast.success(res.message)
+    } else {
+      const errorData = await response.json();
+      toast.error(errorData.message)
+    }
+  } catch (err) {
+    console.log("Failed to lockin selection", err);
+  }
+}
+
+export const EndGameAndFinalize = async (gameId: number): Promise<TeamResult[]> => {
+  try {
+    const response = await fetch(`${BASE_URL}/game/${gameId}/end`);
+    if (!response.ok) {
+      toast.error(`Error ending game: ${response.statusText}`);
+    }
+    const data: TeamResult[] = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to end game:", error);
+    throw error;
+  }
+}
+
+export const getResults = async (gameId: number): Promise<TeamResult[]> => {
+  try {
+    const response = await fetch(`${BASE_URL}/game/${gameId}/results`);
+    if (!response.ok) {
+      toast.error(response.statusText);
+    }
+    const data: TeamResult[] = await response.json();
+    console.log(data);
+    return data;
+
+  } catch (error) {
+    console.error("Failed to get results:", error);
+    throw error;
+  }
+};
+

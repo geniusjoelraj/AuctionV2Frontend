@@ -6,6 +6,7 @@ import '../style.css'
 import { useRef, useEffect, useState } from "react";
 import { formatNumber } from "@/utils/bid";
 import { Download } from "lucide-react";
+import { Badge } from "./ui/badge";
 
 const proxyUrl = (url: string) => `/api/image-proxy?url=${encodeURIComponent(url)}`;
 
@@ -45,46 +46,47 @@ export default function PlayerCard({ player, downloadable }: { player: Player | 
   }, [player]);
 
   if (player === "EMPTY") {
-    return (<><svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="327.5"
-      height="505"
-      viewBox="0 0 131 202"
-      fill="none"
-    >
-      <defs>
-        <clipPath id="cardShape">
-          <path d="M1 169.766V28.5C4.5 28.3333 14.1 25.6 24.5 16C34.9 6.40001 46.1667 4.33334 50.5 4.50001C52.5 8.16667 58.4 12.7 66 1.5C73.6 12.7 79 8.16667 81 4.50001C85.3333 4.33334 96.6 6.40001 107 16C117.4 25.6 127 28.3333 130.5 28.5V169.766C130.5 170.253 130.438 170.74 130.247 171.188C129.459 173.038 127.368 176.093 123.5 177.5C118 179.5 87 188.5 75.5 195L65 200.5L56 195C44.5 188.5 13.5 179.5 8 177.5C4.13204 176.093 2.04148 173.038 1.25279 171.188C1.062 170.74 1 170.253 1 169.766Z" />
-        </clipPath>
+    return (<>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="327.5"
+        height="505"
+        viewBox="0 0 131 202"
+        fill="none"
+      >
+        <defs>
+          <clipPath id="cardShape">
+            <path d="M1 169.766V28.5C4.5 28.3333 14.1 25.6 24.5 16C34.9 6.40001 46.1667 4.33334 50.5 4.50001C52.5 8.16667 58.4 12.7 66 1.5C73.6 12.7 79 8.16667 81 4.50001C85.3333 4.33334 96.6 6.40001 107 16C117.4 25.6 127 28.3333 130.5 28.5V169.766C130.5 170.253 130.438 170.74 130.247 171.188C129.459 173.038 127.368 176.093 123.5 177.5C118 179.5 87 188.5 75.5 195L65 200.5L56 195C44.5 188.5 13.5 179.5 8 177.5C4.13204 176.093 2.04148 173.038 1.25279 171.188C1.062 170.74 1 170.253 1 169.766Z" />
+          </clipPath>
 
-        <linearGradient id="paint0_linear_1_8" x1="65.75" y1="1.5" x2="65.75" y2="200.5" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#E5CE6E" />
-          <stop offset="0.509578" stopColor="#B38123" />
-          <stop offset="1" stopColor="#B47B11" />
-        </linearGradient>
-      </defs>
+          <linearGradient id="paint0_linear_1_8" x1="65.75" y1="1.5" x2="65.75" y2="200.5" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#E5CE6E" />
+            <stop offset="0.509578" stopColor="#B38123" />
+            <stop offset="1" stopColor="#B47B11" />
+          </linearGradient>
+        </defs>
 
-      <g clipPath="url(#cardShape)">
-        <image
-          href="/card-bg.jpg"
-          x="-50%"
-          y="70%"
-          width="150%"
-          height="100%"
-          style={{ transformOrigin: 'center' }}
-          transform="rotate(90, 65.5, 101)"
-          preserveAspectRatio="xMidYMid slice"
+        <g clipPath="url(#cardShape)">
+          <image
+            href="/card-bg.jpg"
+            x="-50%"
+            y="70%"
+            width="150%"
+            height="100%"
+            style={{ transformOrigin: 'center' }}
+            transform="rotate(90, 65.5, 101)"
+            preserveAspectRatio="xMidYMid slice"
+          />
+        </g>
+
+        <path
+          d="M1 169.766V28.5C4.5 28.3333 14.1 25.6 24.5 16C34.9 6.40001 46.1667 4.33334 50.5 4.50001C52.5 8.16667 58.4 12.7 66 1.5C73.6 12.7 79 8.16667 81 4.50001C85.3333 4.33334 96.6 6.40001 107 16C117.4 25.6 127 28.3333 130.5 28.5V169.766C130.5 170.253 130.438 170.74 130.247 171.188C129.459 173.038 127.368 176.093 123.5 177.5C118 179.5 87 188.5 75.5 195L65 200.5L56 195C44.5 188.5 13.5 179.5 8 177.5C4.13204 176.093 2.04148 173.038 1.25279 171.188C1.062 170.74 1 170.253 1 169.766Z"
+          stroke="url(#paint0_linear_1_8)"
+          strokeWidth="3"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
-      </g>
-
-      <path
-        d="M1 169.766V28.5C4.5 28.3333 14.1 25.6 24.5 16C34.9 6.40001 46.1667 4.33334 50.5 4.50001C52.5 8.16667 58.4 12.7 66 1.5C73.6 12.7 79 8.16667 81 4.50001C85.3333 4.33334 96.6 6.40001 107 16C117.4 25.6 127 28.3333 130.5 28.5V169.766C130.5 170.253 130.438 170.74 130.247 171.188C129.459 173.038 127.368 176.093 123.5 177.5C118 179.5 87 188.5 75.5 195L65 200.5L56 195C44.5 188.5 13.5 179.5 8 177.5C4.13204 176.093 2.04148 173.038 1.25279 171.188C1.062 170.74 1 170.253 1 169.766Z"
-        stroke="url(#paint0_linear_1_8)"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg></>)
+      </svg></>)
   }
 
   const handleDownload = async () => {

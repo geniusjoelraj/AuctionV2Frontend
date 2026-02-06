@@ -1,6 +1,6 @@
 import { socketService } from "@/socket";
 import { formatNumber } from "@/utils/bid";
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect, useCallback, useRef } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
 export default function Bid({
@@ -10,25 +10,45 @@ export default function Bid({
   currentBid: number;
   setCurrentBid: Dispatch<SetStateAction<number>>;
 }) {
-  useEffect(() => {
-    socketService.connect(() => {
-      handleSendBid(currentBid)
-    });
+  const initialBidSent = useRef(false);
 
-    return () => {
-      socketService.disconnect();
-    };
-  }, [currentBid]);
+  const handleSendBid = useCallback((bid: number) => {
+    if (!socketService.isConnected()) {
+      console.warn('Cannot send bid: Not connected');
+      return;
+    }
 
-  const handleSendBid = (bid: number) => {
     socketService.publish("/app/game/1/bids", { currentBid: bid });
     setCurrentBid(bid);
-  };
-
-  useHotkeys('up', () => handleSendBid(currentBid + 2500000))
-  useHotkeys('down', () => handleSendBid(currentBid - 2500000))
+  }, [setCurrentBid]);
 
 
+  useEffect(() => {
+    const setupConnection = () => {
+      if (socketService.isConnected()) {
+        if (!initialBidSent.current) {
+          handleSendBid(currentBid);
+          initialBidSent.current = true;
+        }
+      } else {
+        socketService.connect(() => {
+          if (!initialBidSent.current) {
+            handleSendBid(currentBid);
+            initialBidSent.current = true;
+          }
+        });
+      }
+    };
+
+    setupConnection();
+
+    return () => {
+      initialBidSent.current = false;
+    };
+  }, []);
+  // Hotkeys
+  useHotkeys('up', () => handleSendBid(currentBid + 2500000), [currentBid, handleSendBid]);
+  useHotkeys('down', () => handleSendBid(currentBid - 2500000), [currentBid, handleSendBid]);
 
   return (
     <div className="flex flex-col items-center w-72 justify-center">
