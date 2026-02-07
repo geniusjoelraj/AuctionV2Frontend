@@ -119,7 +119,12 @@ export default function GameCreate() {
           />
           <Button type="submit" className='bg-primary text-secondary px-2 py-1 rounded-sm'>Start</Button>
           <p className="text-primary text-sm cursor-pointer underline" onClick={() => setIsJoin(false)}>Create Game</p>
-          <Button type="button" className='bg-primary text-secondary px-2 py-1 rounded-sm' onClick={() => router.push('/host/view')}>Go to dashboard</Button>
+          <Button type="button" className='bg-primary text-secondary px-2 py-1 rounded-sm'
+            onClick={() => {
+              localStorage.setItem('game', gameId)
+              router.push('/host/view')
+            }}>
+            Go to dashboard</Button>
         </form>
         <ToastContainer
           position="top-right"
