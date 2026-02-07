@@ -5,13 +5,23 @@ import { createGame, getGames, startGame } from "@/utils/api"
 import { Button, Input } from "@base-ui/react"
 import { Label } from "@radix-ui/react-label"
 import { useRouter } from "next/navigation"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { toast, ToastContainer } from "react-toastify"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 
 export default function GameCreate() {
   const [gameId, setGameId] = useState<string>('')
   const [gameInitialAmount, setGameInitialAmount] = useState<string>('')
   const [gameName, setGameName] = useState<string>('')
+  const [gamesList, setGamesList] = useState<Game[]>()
+  const router = useRouter()
   const [playerLimits, setPlayerLimits] = useState({
     total: ',',
     batsmen: '',
@@ -19,13 +29,15 @@ export default function GameCreate() {
     allrounder: '',
     keeper: '',
     uncapped: '',
-    legends: ''
+    legends: '',
+    special: '',
+    substitute: '',
+    foreign: ''
   })
-  // setPlayerLimits(prev => ({ ...prev, batsmen: '5' }))
+  const [trigger, setTrigger] = useState(false)
 
   const [isJoin, setIsJoin] = useState<boolean>(true)
   const handleCreateGame = async (e: React.FormEvent) => {
-    e.preventDefault()
     const newGame: NewGame = {
       setId: 1,
       name: gameName,
@@ -35,7 +47,10 @@ export default function GameCreate() {
       bowlersPerTeam: parseInt(playerLimits.bowler),
       allRounderPerTeam: parseInt(playerLimits.allrounder),
       wicketKeeperPerTeam: parseInt(playerLimits.keeper),
-      LegendsPerTeam: parseInt(playerLimits.legends),
+      specialPlayersPerTeam: parseInt(playerLimits.special),
+      substitutesPerTeam: parseInt(playerLimits.substitute),
+      foreignPlayersPerTeam: parseInt(playerLimits.foreign),
+      legendsPerTeam: parseInt(playerLimits.legends),
       unCappedPerTeam: parseInt(playerLimits.uncapped)
     }
     createGame(newGame)
@@ -43,26 +58,52 @@ export default function GameCreate() {
   const handleGame = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      getGames().then((games: Game[]) => {
-        if (games) {
-          const gameIds = games.map((game) => game.id)
-          if (gameIds.includes(parseInt(gameId))) {
-            startGame(parseInt(gameId))
-            //   const game = games.find((game) => game.id === parseInt(gameId))
-            //   if (game?.status === 'INACTIVE') {
-            //     toast.error('Game not started yet')
-            //   } else {
-            //     router.push('/')
-            //   }
-            // } else {
-            //   toast.error('No such game exits')
-          }
+      const games = await getGames()
+      if (games) {
+        const gameIds = games.map((game) => game.id)
+        if (gameIds.includes(parseInt(gameId))) {
+          await startGame(parseInt(gameId))
+          setTrigger((prev) => !prev)
+        } else {
+          toast.error('No such game')
         }
-      })
-    } catch {
-      toast.error('No such game')
+      }
+    } catch (error) {
+      toast.error('Failed to load games')
     }
   }
+
+  useEffect(() => {
+    if (localStorage.getItem('teamName') !== 'host') router.push('/')
+    getGames().then((games: Game[]) => {
+      setGamesList(games)
+    })
+  }, [trigger, isJoin])
+
+  const createDefault = () => {
+    if (gameName === '') {
+      toast.error('Your game needs a name')
+      return
+    } else {
+      const newGame: NewGame = {
+        setId: 1,
+        name: gameName,
+        initialBalance: parseInt(gameInitialAmount),
+        playersPerTeam: parseInt(playerLimits.total) | 12,
+        batsmenPerTeam: parseInt(playerLimits.batsmen) | 4,
+        bowlersPerTeam: parseInt(playerLimits.bowler) | 4,
+        allRounderPerTeam: parseInt(playerLimits.allrounder) | 2,
+        wicketKeeperPerTeam: parseInt(playerLimits.keeper) | 1,
+        specialPlayersPerTeam: parseInt(playerLimits.special) | 3,
+        substitutesPerTeam: parseInt(playerLimits.substitute) | 3,
+        foreignPlayersPerTeam: parseInt(playerLimits.foreign) | 5,
+        legendsPerTeam: parseInt(playerLimits.legends) | 1,
+        unCappedPerTeam: parseInt(playerLimits.uncapped) | 1
+      }
+      createGame(newGame)
+    }
+  }
+
   return (
     isJoin ?
       <div className="flex min-h-screen items-center justify-center">
@@ -78,6 +119,7 @@ export default function GameCreate() {
           />
           <Button type="submit" className='bg-primary text-secondary px-2 py-1 rounded-sm'>Start</Button>
           <p className="text-primary text-sm cursor-pointer underline" onClick={() => setIsJoin(false)}>Create Game</p>
+          <Button type="button" className='bg-primary text-secondary px-2 py-1 rounded-sm' onClick={() => router.push('/host/view')}>Go to dashboard</Button>
         </form>
         <ToastContainer
           position="top-right"
@@ -90,6 +132,27 @@ export default function GameCreate() {
           draggable
           pauseOnHover
         />
+        <div className="flex flex-col">
+          <h1 className="text-xl font-semibold">Active games</h1>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Id</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {gamesList?.map((game) => (
+                <TableRow key={game.id} className={game.status === 'ACTIVE' ? 'text-green-500' : 'text-red-500'}>
+                  <TableCell>{game.id}</TableCell>
+                  <TableCell>{game.name}</TableCell>
+                  <TableCell>{game.status}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
       :
       <div className="flex min-h-screen items-center justify-center">
@@ -122,7 +185,7 @@ export default function GameCreate() {
           </div>
           <div className="space-y-4 pt-4">
             {Object.keys(playerLimits).map((role) => (
-              <div key={role} className="flex flex-col gap-2">
+              <div key={role} className="grid grid-cols-2 gap-2">
                 <Label className="capitalize" htmlFor={role}>
                   {role} Limit
                 </Label>
@@ -142,6 +205,7 @@ export default function GameCreate() {
             ))}
           </div>
           <Button type="submit" className='bg-primary text-secondary px-2 py-1 rounded-sm'>Create</Button>
+          <Button type="button" onClick={createDefault} className='bg-primary text-secondary px-2 py-1 ml-4 rounded-sm'>Create Using defaults</Button>
           <p className="text-primary text-sm cursor-pointer underline" onClick={() => setIsJoin(true)}>Join Game</p>
         </form>
         <ToastContainer

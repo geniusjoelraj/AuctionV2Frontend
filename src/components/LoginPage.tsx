@@ -68,6 +68,9 @@ const LoginForm = ({ isAdmin }: { isAdmin: boolean }) => {
       if (password !== 'gta6') {
         toast.error('Incorrect password')
         return false
+      } else if (!await gameExists(gameId)) {
+        localStorage.setItem('teamName', selectedTeam)
+        router.push('/create')
       }
       const valid = await gameExists(gameId)
       if (!valid) return false

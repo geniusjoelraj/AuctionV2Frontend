@@ -1,6 +1,6 @@
 "use client";
 import { useState, useMemo, useEffect } from "react";
-import { Player, PlayerType } from "@/types/api"; import { fetchPlayers, finalizeGame } from '@/utils/api'
+import { Player, PlayerType } from "@/types/api"; import { fetchPlayers, finalizeGame, getGame } from '@/utils/api'
 import PlayerCard from "@/components/PlayerCard";
 import Bidder from "@/components/Bidder";
 import Bid from "@/components/Bid";
@@ -24,6 +24,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button";
+import { socketService } from "@/socket";
 export default function PlayerGallery() {
   const [players, setPlayers] = useState<Player[]>([]);
   const [filter, setFilter] = useState<PlayerType>("BATSMAN");
@@ -67,6 +68,8 @@ export default function PlayerGallery() {
   })
   useEffect(() => {
     const id = parseInt(localStorage.getItem('game')!)
+    const active = getGame(id).then(data => data.status === 'ACTIVE')
+    if (!active) router.push('/create')
     setGame(id)
     if (id) {
       fetchPlayers(id).then(data => {
@@ -116,6 +119,7 @@ export default function PlayerGallery() {
 
   const handleFinalizeGame = () => {
     finalizeGame(game!)
+    socketService.publish("/app/game/1/bids", { currentBid: 0 });
     router.push('/host/end')
   }
 

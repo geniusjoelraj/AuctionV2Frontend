@@ -1,4 +1,5 @@
 'use client'
+
 import { Player } from "@/types/api";
 import StatDisplay from "@/components/StatDisplay";
 import { domToPng } from "modern-screenshot";
@@ -6,7 +7,6 @@ import '../style.css'
 import { useRef, useEffect, useState } from "react";
 import { formatNumber } from "@/utils/bid";
 import { Download } from "lucide-react";
-import { Badge } from "./ui/badge";
 
 const proxyUrl = (url: string) => `/api/image-proxy?url=${encodeURIComponent(url)}`;
 
@@ -120,7 +120,7 @@ export default function PlayerCard({ player, downloadable }: { player: Player | 
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gridColumn: "span 2 / span 2", gridRow: "span 7 / span 7" }}>
             <p style={{ fontSize: "2.5rem", fontWeight: "bold" }}>{player.id}</p>
             <p style={{ fontSize: "1.3rem", fontWeight: 550, marginTop: "-10px" }}>{player.type.slice(0, 3)}</p>
-            <img src={proxyUrl("https://flagsapi.com/IN/flat/64.png")} alt="flag" width={50} style={{ marginTop: "7px", marginBottom: "7px" }} />
+            <img src={`/flags/${player.country}.jpg`} alt="flag" width={50} style={{ marginTop: "7px", marginBottom: "7px" }} />
             <p style={{ textAlign: "center", fontWeight: 550, lineHeight: "120%" }}>BASE <br /> PRICE</p>
             <p style={{ color: "#FFE2AA", fontSize: "1.5rem", fontWeight: 900 }}>{formatNumber(player.price)}</p>
           </div>

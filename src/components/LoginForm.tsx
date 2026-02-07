@@ -2,10 +2,13 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import LoginForm from './LoginPage'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 function Login() {
 
+  useEffect(() => {
+    localStorage.clear()
+  })
   const [asAdmin, setAsAdmin] = useState(false)
   return (
     <div className='relative flex h-dvh items-center justify-center overflow-x-hidden px-4 py-10 sm:px-6 lg:px-8'>

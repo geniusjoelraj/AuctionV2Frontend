@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { NewGame, TeamDetails, Transaction } from "@/types/api"
+import { Game, NewGame, TeamDetails, Transaction } from "@/types/api"
 import { useEffect, useState, useCallback, useRef } from "react"
 import { socketService } from "@/socket"
 import { formatNumber } from "@/utils/bid"
@@ -32,11 +32,21 @@ export function DataTable({ players, teamDetails, teamName }: { players: Array<T
   const [isMounted, setIsMounted] = useState(false)
   const router = useRouter()
   const subscribedTopics = useRef<string[]>([])
+  const [gameStatus, setGameStatus] = useState<string>()
+  const [gameId, setGameId] = useState<number>()
 
   useEffect(() => {
     setIsMounted(true)
     setIsAdmin(localStorage.getItem('teamName') === 'admin')
+    setGameId(parseInt(localStorage.getItem('game')!))
+
   }, [])
+
+  useEffect(() => {
+    getGame(gameId!).then((data) => {
+      setGameStatus(data.status)
+    })
+  }, [bid, isMounted])
 
   useEffect(() => {
     if (!isMounted) return
@@ -227,9 +237,9 @@ export function DataTable({ players, teamDetails, teamName }: { players: Array<T
                   </div>
                 </AccordionContent>
               </AccordionItem>
-              {teamComplete && !isAdmin && (
+              {teamComplete && !isAdmin && gameStatus === 'FINALIZED' ? (
                 <Button onClick={() => setSetTeam(true)}>Set Team</Button>
-              )}
+              ) : <></>}
             </Accordion>
           </div>
         </div>
