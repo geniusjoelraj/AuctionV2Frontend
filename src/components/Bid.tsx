@@ -1,6 +1,6 @@
 import { socketService } from "@/socket";
-import { formatNumber } from "@/utils/bid";
-import { Dispatch, SetStateAction, useEffect, useCallback, useRef } from "react";
+import { formatNumber, getIncrement } from "@/utils/bid";
+import { Dispatch, SetStateAction, useEffect, useCallback, useRef, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
 export default function Bid({
@@ -22,6 +22,12 @@ export default function Bid({
     setCurrentBid(bid);
   }, [setCurrentBid]);
 
+  const [bidInc, setBidInc] = useState(500000)
+
+
+  useEffect(() => {
+    setBidInc(getIncrement(currentBid))
+  }, [currentBid])
 
   useEffect(() => {
     const setupConnection = () => {
@@ -61,13 +67,14 @@ export default function Bid({
         >
           -25L
         </button>
-        <button
-          className="text-4xl rounded-xl p-4 py-3 bg-[#42684f] font-bold hover:bg-[#50A36D]"
-          onClick={() => handleSendBid(currentBid + 2500000)}
-        >
-          +25L
-        </button>
       </div>
+      <button
+        className="text-4xl rounded-xl p-4 py-3 bg-[#42684f] font-bold hover:bg-[#50A36D] flex"
+        onClick={() => handleSendBid(currentBid + bidInc)}
+      >
+        {formatNumber(bidInc)}
+      </button>
+
     </div>
   );
 }

@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button";
 import { socketService } from "@/socket";
+import CircularReveal from "@/components/Reveal";
 export default function PlayerGallery() {
   const [players, setPlayers] = useState<Player[]>([]);
   const [filter, setFilter] = useState<PlayerType>("BATSMAN");
@@ -123,82 +124,84 @@ export default function PlayerGallery() {
     router.push('/host/end')
   }
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <div></div>;
 
   return (
-    <main style={{ backgroundImage: "url('/ipl-stadium-bg.png')" }} className="flex flex-col items-center relative bg-blue-900 h-dvh text-white text-nowrap bg-cover bg-opacity-0 px-20">
-      <div className="flex flex-col items-center relative w-full">
-        <AlertDialog>
-          <AlertDialogTrigger asChild className="absolute left-0 top-5">
-            <Button variant="destructive">End Game</Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone. This will end the game
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleFinalizeGame}>Continue</AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-        <h1 className="text-4xl font-bold mb-6"><img src="/srm-ipl.png" alt="IPL" width={100} className="inline -pr-4" onClick={() => router.push("/host/view/legend")} />Auction</h1>
+    <CircularReveal key={0} origin={"50% 0%"}>
+      <main style={{ backgroundImage: "url('/ipl-stadium-bg.png')" }} className="flex flex-col items-center relative bg-blue-900 h-dvh text-white text-nowrap bg-cover bg-opacity-0 px-20">
+        <div className="flex flex-col items-center relative w-full">
+          <AlertDialog>
+            <AlertDialogTrigger asChild className="absolute left-0 top-5">
+              <Button variant="destructive">End Game</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will end the game
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handleFinalizeGame}>Continue</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+          <h1 className="text-4xl font-bold mb-6"><img src="/srm-ipl.png" alt="IPL" width={100} className="inline -pr-4" onClick={() => router.push("/host/view/legend")} />Auction</h1>
 
-        <div className="flex gap-4 mb-8">
-          {["BATSMAN", "BOWLER", "ALL_ROUNDER", "WICKET_KEEPER"].map((cat) => (
-            <button
-              key={cat}
-              onClick={() => handleFilterChange(cat)}
-              className={`px-4 py-2 rounded-sm font-bold ${filter === cat ? "bg-[#674D63] text-white" : "bg-white text-[#674D63]"
-                }`}
-            >
-              {cat.replace("_", " ")}
-            </button>
-          ))}
+          <div className="flex gap-4 mb-8">
+            {["BATSMAN", "BOWLER", "ALL_ROUNDER", "WICKET_KEEPER"].map((cat) => (
+              <button
+                key={cat}
+                onClick={() => handleFilterChange(cat)}
+                className={`px-4 py-2 rounded-sm font-bold ${filter === cat ? "bg-[#674D63] text-white" : "bg-white text-[#674D63]"
+                  }`}
+              >
+                {cat.replace("_", " ")}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
-      <PlayerSearch setFilter={setFilter} players={players} setCurrentIndex={setCurrentIndex} />
-      <Shortcuts />
-      <CustomIncrement bid={currentBid} setCurrentBid={setCurrentBid} />
-      <div className="flex items-center justify-around w-full relative">
-        {currentPlayer ? (
-          <>
-            <div className="relative">
-              {currentPlayer.isForeign ?
-                <Badge className="absolute bottom-10 left-[40%] z-10">Foreign</Badge>
-                : <></>}
-              {currentPlayer.isUncapped ?
-                <Badge className="absolute bottom-10 left-[40%] z-10">Uncapped</Badge>
-                : <></>}
-              <PlayerCard player={currentPlayer} downloadable={false} />
-            </div>
-            <Bid currentBid={currentBid ?? currentPlayer.price} setCurrentBid={setCurrentBid} />
-            <Bidder player={currentPlayer} finalBid={currentBid} />
-          </>
-        ) : (
-          <PlayerCard player="EMPTY" downloadable={false} />
-        )}
+        <PlayerSearch setFilter={setFilter} players={players} setCurrentIndex={setCurrentIndex} />
+        <Shortcuts />
+        <CustomIncrement bid={currentBid} setCurrentBid={setCurrentBid} />
+        <div className="flex items-center justify-around w-full relative">
+          {currentPlayer ? (
+            <>
+              <div className="relative">
+                {currentPlayer.isForeign ?
+                  <Badge className="absolute bottom-10 left-[40%] z-10">Foreign</Badge>
+                  : <></>}
+                {currentPlayer.isUncapped ?
+                  <Badge className="absolute bottom-10 left-[40%] z-10">Uncapped</Badge>
+                  : <></>}
+                <PlayerCard player={currentPlayer} downloadable={false} />
+              </div>
+              <Bid currentBid={currentBid ?? currentPlayer.price} setCurrentBid={setCurrentBid} />
+              <Bidder player={currentPlayer} finalBid={currentBid} />
+            </>
+          ) : (
+            <PlayerCard player="EMPTY" downloadable={false} />
+          )}
 
-        <div className="absolute bottom-10 flex w-11/12 justify-between hidden">
-          <button onClick={prev} className="control-btn text-[#674D63] p-3 w-28 rounded-sm text-xl font-semibold cursor-pointer">Prev</button>
-          <button onClick={next} className="control-btn text-[#674D63] p-3 w-28 rounded-sm text-xl font-semibold cursor-pointer">Next</button>
+          <div className="absolute bottom-10 flex w-11/12 justify-between hidden">
+            <button onClick={prev} className="control-btn text-[#674D63] p-3 w-28 rounded-sm text-xl font-semibold cursor-pointer">Prev</button>
+            <button onClick={next} className="control-btn text-[#674D63] p-3 w-28 rounded-sm text-xl font-semibold cursor-pointer">Next</button>
+          </div>
         </div>
-      </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-      <Progress value={100 * ((currentIndex + 1) / filteredPlayers.length)} className="absolute bottom-10 left-10 w-11/12" />
-    </main>
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+        <Progress value={100 * ((currentIndex + 1) / filteredPlayers.length)} className="absolute bottom-10 left-10 w-11/12" />
+      </main>
+    </CircularReveal>
   );
 }

@@ -59,9 +59,9 @@ export default function page() {
       </TableHeader>
       <TableBody>
         {results?.map((result) =>
-          <TableRow key={result.place}>
+          <TableRow key={result.place} >
             <TableCell>{result.place}</TableCell>
-            <TableCell>{result.teamStats.name}</TableCell>
+            <TableCell className={!result.isQualified ? 'text-red-500' : ''}>{result.teamStats.name}</TableCell>
             <TableCell>{result.teamStats.balance}</TableCell>
             <TableCell>{result.teamStats.points}</TableCell>
           </TableRow>

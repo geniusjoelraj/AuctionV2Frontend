@@ -136,3 +136,29 @@ export function substituteCheck(subplayers: Transaction[], allPlayers: Transacti
   setIsValid(true);
   return filPlayers
 }
+
+export function getIncrement(currentBid: number): number {
+  const LAKH = 100_000;
+  const CRORE = 10_000_000;
+
+  if (currentBid < 50 * LAKH) {
+    return 5 * LAKH; // Default starting increment
+  } else if (currentBid < 1 * CRORE) {
+    return 5 * LAKH;
+  } else if (currentBid < 2 * CRORE) {
+    return 10 * LAKH;
+  } else if (currentBid < 5 * CRORE) {
+    return 20 * LAKH;
+  } else if (currentBid < 15 * CRORE) {
+    return 25 * LAKH;
+  } else if (currentBid < 20 * CRORE) {
+    return 50 * LAKH;
+  } else if (currentBid < 30 * CRORE) {
+    return 1 * CRORE;
+  } else if (currentBid < 50 * CRORE) {
+    return 5 * CRORE;
+  } else {
+    return 10 * CRORE; // For bids 50CR and above
+  }
+}
+
