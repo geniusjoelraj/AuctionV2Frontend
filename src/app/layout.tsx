@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Jersey_15, Orbitron } from "next/font/google";
+import { Almendra, Inter, Jersey_15, Orbitron, Pirata_One } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 
@@ -11,8 +11,8 @@ const orbitron = Orbitron({
   variable: "--font-orbitron"
 })
 
-const jersey = Jersey_15({
-  variable: "--font-jersey",
+const legend = Almendra({
+  variable: "--font-legend",
   weight: "400"
 })
 
@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${orbitron.variable} ${jersey.variable} font-sans antialiased`}
+        className={`${inter.variable} ${orbitron.variable} ${legend.variable} font-sans antialiased`}
       >
         <ThemeProvider
           attribute="class"

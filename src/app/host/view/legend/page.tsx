@@ -109,14 +109,14 @@ export default function PlayerGallery() {
     <CircularReveal key={0} origin={"50% 0%"}>
       <main style={{ backgroundImage: "url('/ipl-stadium-bg.png')" }} className="flex flex-col items-center relative bg-blue-900 h-dvh text-white text-nowrap bg-cover bg-opacity-0 px-20">
         <div className="flex flex-col items-center relative">
-          <h1 className="text-4xl font-bold mb-6 text-violet-500" ><img src="/srm-ipl.png" alt="IPL" width={100} className="inline -pr-4 font-jersey" onClick={() => router.push("/host/view")} />LEGENDS</h1>
+          <h1 className="text-5xl font-bold mb-6 bg-gradient-to-br from-[#DEC76A] to-[#B37B13] bg-clip-text text-transparent font-legend" ><img src="/srm-ipl.png" alt="IPL" width={100} className="inline -pr-4" onClick={() => router.push("/host/view")} />LEGENDS</h1>
 
           <div className="flex gap-4 mb-8">
             {["BATSMAN", "BOWLER", "ALL_ROUNDER", "WICKET_KEEPER"].map((cat) => (
               <button
                 key={cat}
                 onClick={() => handleFilterChange(cat)}
-                className={`px-4 py-2 rounded-sm font-bold ${filter === cat ? "bg-[#674D63] text-white" : "bg-white text-[#674D63]"
+                className={`px-4 py-2 rounded-sm font-bold ${filter === cat ? "bg-gradient-to-br from-[#DEC76A] to-[#B37B13] text-white" : "bg-white text-[#674D63]"
                   }`}
               >
                 {cat.replace("_", " ")}

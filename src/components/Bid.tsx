@@ -53,8 +53,8 @@ export default function Bid({
     };
   }, []);
   // Hotkeys
-  useHotkeys('up', () => handleSendBid(currentBid + 2500000), [currentBid, handleSendBid]);
-  useHotkeys('down', () => handleSendBid(currentBid - 2500000), [currentBid, handleSendBid]);
+  useHotkeys('up', () => handleSendBid(currentBid + bidInc), [currentBid, handleSendBid]);
+  useHotkeys('down', () => handleSendBid(currentBid - bidInc), [currentBid, handleSendBid]);
 
   return (
     <div className="flex flex-col items-center w-72 justify-center">
@@ -63,7 +63,7 @@ export default function Bid({
       <div className="flex justify-center items-center gap-4 hidden">
         <button
           className="text-4xl rounded-xl p-4 py-3 bg-[#A94A55] font-bold hover:bg-[#DE4255]"
-          onClick={() => handleSendBid(currentBid - 2500000)}
+          onClick={() => handleSendBid(currentBid - bidInc)}
         >
           -25L
         </button>

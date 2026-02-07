@@ -56,7 +56,7 @@ export function PlayerSearch({ players, setCurrentIndex, setFilter }: { players:
 
         </ComboboxContent>
       </Combobox>
-      <button type="submit" className="bg-[#674D63] p-2 py-1 rounded-sm">Go</button>
+      <button type="submit" className={players[0].isLegend ? 'bg-gradient-to-br from-[#DEC76A] to-[#B37B13] p-2 py-1 rounded-sm' : 'bg-[#674D63] p-2 py-1 rounded-sm'}>Go</button>
     </form>
   )
 }
