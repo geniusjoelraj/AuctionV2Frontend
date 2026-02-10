@@ -65,14 +65,14 @@ export default function Bid({
           className="text-4xl rounded-xl p-4 py-3 bg-[#A94A55] font-bold hover:bg-[#DE4255]"
           onClick={() => handleSendBid(currentBid - bidInc)}
         >
-          -25L
+          -{formatNumber(bidInc)}
         </button>
       </div>
       <button
-        className="text-4xl rounded-xl p-4 py-3 bg-[#42684f] font-bold hover:bg-[#50A36D] flex"
+        className="text-4xl rounded-xl p-4 py-3 bg-white font-bold  flex text-black"
         onClick={() => handleSendBid(currentBid + bidInc)}
       >
-        {formatNumber(bidInc)}
+        +{formatNumber(bidInc)}
       </button>
 
     </div>

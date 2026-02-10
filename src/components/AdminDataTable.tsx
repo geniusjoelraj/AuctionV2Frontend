@@ -7,7 +7,6 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { teams } from "@/utils/constants";
 import { DataTableWrapper } from "./DataTableWrapper";
 import GameLogs from "./GameLogs";
-import { useHotkeys } from "react-hotkeys-hook";
 import AdminControls from "./AdminControls";
 
 import {

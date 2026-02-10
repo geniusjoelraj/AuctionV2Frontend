@@ -43,9 +43,11 @@ export function DataTable({ players, teamDetails, teamName }: { players: Array<T
   }, [])
 
   useEffect(() => {
-    getGame(gameId!).then((data) => {
-      setGameStatus(data.status)
-    })
+    if (gameId) {
+      getGame(gameId).then((data) => {
+        setGameStatus(data.status)
+      })
+    }
   }, [bid, isMounted])
 
   useEffect(() => {

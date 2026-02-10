@@ -7,6 +7,7 @@ import '../style.css'
 import { useRef, useEffect, useState } from "react";
 import { formatNumber } from "@/utils/bid";
 import { Download } from "lucide-react";
+import Image from "next/image";
 
 const proxyUrl = (url: string) => `/api/image-proxy?url=${encodeURIComponent(url)}`;
 
@@ -26,10 +27,8 @@ export default function PlayerCard({ player, downloadable }: { player: Player | 
       const maxFontSize = 28;
       let fontSize = maxFontSize;
 
-      // Temporarily set to max size to measure
       textElement.style.fontSize = `${fontSize}px`;
 
-      // Reduce font size until text fits
       while (textElement.scrollWidth > parentWidth && fontSize > 8) {
         fontSize -= 0.5;
         textElement.style.fontSize = `${fontSize}px`;
@@ -40,7 +39,6 @@ export default function PlayerCard({ player, downloadable }: { player: Player | 
 
     fitTextToContainer();
 
-    // Re-fit on window resize
     window.addEventListener('resize', fitTextToContainer);
     return () => window.removeEventListener('resize', fitTextToContainer);
   }, [player]);
@@ -68,7 +66,7 @@ export default function PlayerCard({ player, downloadable }: { player: Player | 
 
         <g clipPath="url(#cardShape)">
           <image
-            href="/card-bg.jpg"
+            href="/card-bg.png"
             x="-50%"
             y="70%"
             width="150%"
@@ -109,8 +107,6 @@ export default function PlayerCard({ player, downloadable }: { player: Player | 
     <>
       <div style={{ position: "relative" }} ref={cardRef}>
         <img src="/ipl-logo-white.png" alt="ipl-logo" height={30} width={30} style={{ position: "absolute", marginLeft: "45%", marginTop: "25px" }} />
-        {/* <div className="rect-1"> */}
-        {/* </div> */}
         {/* Card Container */}
         <div style={{
           height: "65%", width: "90%", position: "absolute", top: "17%", left: "5%", gridTemplateColumns: "repeat(8, 1fr)",
@@ -120,12 +116,14 @@ export default function PlayerCard({ player, downloadable }: { player: Player | 
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gridColumn: "span 2 / span 2", gridRow: "span 7 / span 7" }}>
             <p style={{ fontSize: "2.5rem", fontWeight: "bold" }}>{player.id}</p>
             <p style={{ fontSize: "1.3rem", fontWeight: 550, marginTop: "-10px" }}>{player.type.slice(0, 3)}</p>
-            <img src={`/flags/${player.country}.jpg`} alt="flag" width={50} style={{ marginTop: "7px", marginBottom: "7px" }} />
+            <Image src={`/flags/${player.country}.jpg`} alt="flag" height={50} width={50} style={{ marginTop: "7px", marginBottom: "7px" }} />
             <p style={{ textAlign: "center", fontWeight: 550, lineHeight: "120%" }}>BASE <br /> PRICE</p>
             <p style={{ color: "#FFE2AA", fontSize: "1.5rem", fontWeight: 900 }}>{formatNumber(player.price)}</p>
           </div>
           {/* Image */}
-          <img style={{ gridColumn: "span 6 / span 6", gridRow: "span 7 / span 7", gridColumnStart: 3, gridRowStart: 1, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }}
+          <Image style={{ gridColumn: "span 6 / span 6", gridRow: "span 7 / span 7", gridColumnStart: 3, gridRowStart: 1, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }}
+            height={100}
+            width={100}
             src={'/players_images/' + player.name + '.png'}
             // src="https://res.cloudinary.com/dkpijdg6a/image/upload/v1770182396/unnamed-removebg-preview_1_cjvzgk.png"
             alt="player image" />
@@ -167,7 +165,7 @@ export default function PlayerCard({ player, downloadable }: { player: Player | 
 
           <g clipPath="url(#cardShape)">
             <image
-              href="/card-bg.jpg"
+              href={player.isLegend ? "/card-bg-purple.png" : "/card-bg.png"}
               x="-50%"
               y="70%"
               width="150%"

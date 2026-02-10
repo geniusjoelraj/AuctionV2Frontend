@@ -92,6 +92,7 @@ export type NewGame = {
   "specialPlayersPerTeam": number;
   "substitutesPerTeam": number;
   "foreignPlayersPerTeam": number;
+  "maxForeignAllowed": number;
   "unCappedPerTeam": number;
 }
 

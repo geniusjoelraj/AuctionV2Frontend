@@ -20,7 +20,8 @@ import { formatNumber, substituteCheck } from "@/utils/bid"
 import { Transaction } from "@/types/api"
 import { Button } from "./ui/button"
 import { toast, ToastContainer } from "react-toastify"
-import { finalizeGame, LockInSelection } from "@/utils/api"
+import { finalizeGame, getLockedIn, LockInSelection } from "@/utils/api"
+import Image from "next/image"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -55,6 +56,7 @@ export function SubstituteDataTable<TData extends Transaction, TValue>({
   const [batsmen, setBatsmen] = useState<Transaction[]>()
   const [bowlers, setBowlers] = useState<Transaction[]>()
   const [allRounders, setALlRounders] = useState<Transaction[]>()
+  const [lockedIn, setLockedIn] = useState(false)
   const finalizeTeam = () => {
     const teamP: Transaction[] = allPlayers.filter((player) => !selectedRowsData.includes(player))
     const subs = allPlayers.filter((player) => selectedRowsData.includes(player)).map((player) => player.playerId)
@@ -69,12 +71,23 @@ export function SubstituteDataTable<TData extends Transaction, TValue>({
     setALlRounders(all)
     setTeamPlayers(teamP)
     setTeamFinal(true)
+    setLockedIn(true)
   }
   useEffect(() => {
     setGameId(parseInt(localStorage.getItem('game')!))
     setTeamName(localStorage.getItem('teamName')!)
     substituteCheck(selectedRowsData, allPlayers, setMessage, setIsValid)
   }, [selectedRowsData])
+
+  useEffect(() => {
+    const game = parseInt(localStorage.getItem('game')!)
+    getLockedIn(game).then((data) => {
+      const team = localStorage.getItem('teamName')
+      setLockedIn(data?.lockedInTeams?.includes(team))
+    })
+  }, [])
+
+
   function shorten(text: string) {
     const n = text.split(' ').length - 1
     const words = text.split(/\s+/);
@@ -82,17 +95,21 @@ export function SubstituteDataTable<TData extends Transaction, TValue>({
   }
   return (
     <>
-      {teamFinal ?
+      {teamFinal && lockedIn ?
         <div className="h-screen w-screen absolute bg-[url(/field.png)] bg-center bg-cover md:bg-contain bg-no-repeat bg-black top-0 left-0 flex items-center flex-col gap-5 p-4 justify-center text-sm font-semibold">
           <p className="text-2xl">Total Points: {teamPlayers?.reduce((acc, p) => acc + p.points, 0)}</p>
-          <Button>View Results</Button>
           <div className="flex flex-col items-center">
             WICKET KEEPERS
             <div className="flex gap-2">
               <>
                 {keepers?.map((keeper) => {
                   return <div className="flex justify-center flex-col w-fit items-center text-base/5" key={keeper.name}>
-                    <img src={'/players_images/' + keeper?.name.toString() + '.png'} alt={keeper.name} width={70} />
+                    <Image
+                      src={'/players_images/' + keeper?.name.toString() + '.png'}
+                      alt={keeper.name}
+                      width={70}
+                      height={100}
+                    />
                     <p className="bg-white rounded-xs inline text-black text-center px-2">{shorten(keeper.name)}</p>
                     <p>{formatNumber(keeper.boughtFor)}</p>
                   </div>

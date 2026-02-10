@@ -51,7 +51,7 @@ export default function Header() {
           </AlertDialogContent>
         </AlertDialog>
       </div>
-      <p className="text-xl font-semibold">Hello, {team}</p>
+      <p className="text-lg font-semibold">Hello, {team}</p>
     </>
   )
 }

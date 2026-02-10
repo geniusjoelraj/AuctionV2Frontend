@@ -48,6 +48,7 @@ export default function GameCreate() {
       allRounderPerTeam: parseInt(playerLimits.allrounder),
       wicketKeeperPerTeam: parseInt(playerLimits.keeper),
       specialPlayersPerTeam: parseInt(playerLimits.special),
+      maxForeignAllowed: parseInt(playerLimits.foreign),
       substitutesPerTeam: parseInt(playerLimits.substitute),
       foreignPlayersPerTeam: parseInt(playerLimits.foreign),
       legendsPerTeam: parseInt(playerLimits.legends),
@@ -96,9 +97,10 @@ export default function GameCreate() {
         wicketKeeperPerTeam: parseInt(playerLimits.keeper) | 1,
         specialPlayersPerTeam: parseInt(playerLimits.special) | 3,
         substitutesPerTeam: parseInt(playerLimits.substitute) | 3,
-        foreignPlayersPerTeam: parseInt(playerLimits.foreign) | 5,
-        legendsPerTeam: parseInt(playerLimits.legends) | 1,
-        unCappedPerTeam: parseInt(playerLimits.uncapped) | 1
+        foreignPlayersPerTeam: parseInt(playerLimits.foreign) | 3,
+        maxForeignAllowed: parseInt(playerLimits.foreign) | 5,
+        legendsPerTeam: parseInt(playerLimits.legends) | 2,
+        unCappedPerTeam: parseInt(playerLimits.uncapped) | 2
       }
       createGame(newGame)
     }

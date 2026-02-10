@@ -1,25 +1,47 @@
 'use client'
+
 import PlayerCard from "@/components/PlayerCard"
 import { Player } from "@/types/api"
 import { fetchPlayer } from "@/utils/api"
 import { useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect, useState, Suspense } from "react"
 
-export default function CardPreview() {
+function CardPreviewContent() {
   const searchParams = useSearchParams()
   const name = searchParams.get('name')
-  const [player, setPlayer] = useState<Player>()
-  useEffect(() => {
-    const gameId = localStorage.getItem('game')
-    if (gameId && name) {
-      console.log(gameId, name);
-      fetchPlayer(parseInt(gameId), name).then(data => setPlayer(data))
-    }
-  })
 
-  return <div className="flex w-full justify-center h-screen bg-[url(https://i.pinimg.com/736x/59/97/87/599787dcbb631c69e37a2b369b491ba3.jpg)] md:bg-[url(/ipl-stadium-bg.png)] md:bg-top bg-cover bg-center pb-15 items-center">
-    <div className="">
-      {player ? <PlayerCard player={player} downloadable={true} /> : <></>}
+  const [player, setPlayer] = useState<Player | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const gameId = typeof window !== 'undefined' ? localStorage.getItem('game') : null
+
+    if (gameId && name) {
+      setLoading(true)
+      fetchPlayer(parseInt(gameId), name)
+        .then((data) => setPlayer(data))
+        .catch((err) => console.error("Fetch error:", err))
+        .finally(() => setLoading(false))
+    } else {
+      setLoading(false)
+    }
+  }, [name])
+
+  if (loading) return <div className="text-white">Loading Card...</div>
+  if (!name) return <div className="text-white">No player name provided in URL.</div>
+  if (!player) return <div className="text-white">Player data not found.</div>
+
+  return <PlayerCard player={player} downloadable={true} />
+}
+
+export default function CardPreview() {
+  return (
+    <div className="flex w-full justify-center h-screen bg-[url(/bg-phone-stadium.jpg)] md:bg-[url(/ipl-stadium-bg.png)] md:bg-top bg-cover bg-center pb-0 items-center">
+      <div className="">
+        <Suspense fallback={<div className="text-white">Initialising...</div>}>
+          <CardPreviewContent />
+        </Suspense>
+      </div>
     </div>
-  </div>
+  )
 }
