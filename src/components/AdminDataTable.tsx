@@ -21,7 +21,7 @@ export function AdminDataTable() {
   const [curTeam, setCurTeam] = useState('CSK')
 
   useEffect(() => {
-    if (!localStorage.getItem('game') && localStorage.getItem('teamName') !== 'admin') {
+    if (!localStorage.getItem('game') && (localStorage.getItem('teamName') !== 'admin' && localStorage.getItem('teamName') !== 'host')) {
       router.push('/')
     }
     const gameId = parseInt(localStorage.getItem('game')!);
@@ -34,7 +34,7 @@ export function AdminDataTable() {
       });
     }
 
-  }, []);
+  }, [curTeam]);
   // useHotkeys('1', () => setCurTeam(teams[0]));
   // useHotkeys('2', () => setCurTeam(teams[1]));
   // useHotkeys('3', () => setCurTeam(teams[2]));

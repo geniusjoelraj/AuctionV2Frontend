@@ -37,7 +37,7 @@ export function DataTable({ players, teamDetails, teamName }: { players: Array<T
 
   useEffect(() => {
     setIsMounted(true)
-    setIsAdmin(localStorage.getItem('teamName') === 'admin')
+    setIsAdmin(localStorage.getItem('teamName') === 'admin' || localStorage.getItem('teamName') === 'host')
     setGameId(parseInt(localStorage.getItem('game')!))
 
   }, [])
