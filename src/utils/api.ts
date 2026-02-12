@@ -1,6 +1,5 @@
 import { Game, NewGame, Player, TeamDetails, TeamResult, Transaction } from '@/types/api'
 import { toast } from 'react-toastify';
-import { teams } from './constants';
 
 const HOST = process.env.NEXT_PUBLIC_HOST || "localhost"
 const BASE_URL = `http://${HOST}:6769`;
