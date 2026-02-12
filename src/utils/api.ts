@@ -2,8 +2,8 @@ import { Game, NewGame, Player, TeamDetails, TeamResult, Transaction } from '@/t
 import { toast } from 'react-toastify';
 import { teams } from './constants';
 
-const HOST = process.env.NEXT_PUBLIC_HOST || "localhost"
-const BASE_URL = `http://${HOST}:6769`;
+const HOST = process.env.NEXT_PUBLIC_HOST || "auc-api.geniuspace.in"
+const BASE_URL = `https://${HOST}`;
 
 export const fetchPlayers = async (gameId: number): Promise<Player[]> => {
   try {

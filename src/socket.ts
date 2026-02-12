@@ -1,8 +1,8 @@
 import { Client, IFrame, StompSubscription } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
-const HOST = process.env.NEXT_PUBLIC_HOST || "localhost"
-const SOCKET_URL = `http://${HOST}:6769/ws`;
+const HOST = process.env.NEXT_PUBLIC_HOST || "auc-api.geniuspace.in"
+const SOCKET_URL = `https://${HOST}/ws`;
 
 type ConnectionStatus = 'disconnected' | 'connecting' | 'connected';
 
