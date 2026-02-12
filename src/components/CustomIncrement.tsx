@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog"
 import { Field, FieldGroup } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { formatNumber } from "@/utils/bid"
 import { useEffect, useState, useRef } from "react"
 import { Dispatch, SetStateAction } from "react";
 import { useHotkeys } from "react-hotkeys-hook"
@@ -36,12 +37,9 @@ export default function CustomIncrement({ bid, setCurrentBid }: { bid: number, s
       <DialogTrigger asChild>
         <Button variant="outline" ref={customBidRef} className="hidden">Custom</Button>
       </DialogTrigger>
-      <DialogContent
-        className="sm:max-w-sm fixed bottom-10 left-1/2 -translate-x-1/2 translate-y-0 top-auto rounded-b-none border-b-0 data-[state=open]:slide-in-from-bottom-full"
-        onOpenAutoFocus={(e) => e.preventDefault()}
-      >
+      <DialogContent className="sm:max-w-sm fixed bottom-10 left-1/2 -translate-x-1/2 translate-y-0 top-auto">
         <DialogHeader>
-          <DialogTitle>Bid</DialogTitle>
+          <DialogTitle>Bid <span className="opacity-85">({formatNumber(parseInt(curbid))})</span></DialogTitle>
         </DialogHeader>
         <FieldGroup>
           <Field>
