@@ -15,12 +15,11 @@ import {
 import { TeamResult } from "@/types/api";
 import { formatNumber } from "@/utils/bid";
 import Header from "@/components/Header";
+import { ToastContainer } from "react-toastify";
 
 export default function page() {
   const [lockedTeam, setLockedTeam] = useState<{ lockedInCount: number, lockedInTeams: string[] }>()
   const [game, setGame] = useState<number>()
-  const router = useRouter()
-  const [gameEnd, setGameEnd] = useState(false)
   const [results, setReults] = useState<TeamResult[]>()
 
   useEffect(() => {
@@ -31,23 +30,21 @@ export default function page() {
   }, [])
 
   const handleLockedIn = () => {
-    getLockedIn(game!).then((data) => {
-      setLockedTeam(data)
-    })
+    if (game) {
+      getLockedIn(game!).then((data) => {
+        setLockedTeam(data)
+      })
+    }
   }
   const handleEndGame = () => {
-    // try {
-    //   EndGameAndFinalize(game!).then((data) => {
-    //     setReults(data)
-    //   })
-    // } catch (err) {
-    getResults(game!).then((data) => {
-      if (data.length > 0) {
-        setReults(data)
-      }
-    })
+    if (game) {
+      EndGameAndFinalize(game!).then((data) => {
+        if (data.length > 0) {
+          setReults(data)
+        }
+      })
+    }
   }
-
 
   return (
     <div className="p-10">
@@ -59,7 +56,7 @@ export default function page() {
         <div className="flex gap-3">
           {lockedTeam?.lockedInTeams?.map(team => <p key={team}>{team}</p>)}
         </div>
-        <Button onClick={handleEndGame}>Show Results</Button>
+        <Button onClick={handleEndGame}>End game and show results</Button>
         <Table>
           <TableHeader>
             <TableRow>
@@ -81,5 +78,16 @@ export default function page() {
           </TableBody>
         </Table>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>)
 }
