@@ -36,7 +36,10 @@ export default function CustomIncrement({ bid, setCurrentBid }: { bid: number, s
       <DialogTrigger asChild>
         <Button variant="outline" ref={customBidRef} className="hidden">Custom</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-sm">
+      <DialogContent
+        className="sm:max-w-sm fixed bottom-10 left-1/2 -translate-x-1/2 translate-y-0 top-auto rounded-b-none border-b-0 data-[state=open]:slide-in-from-bottom-full"
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>Bid</DialogTitle>
         </DialogHeader>

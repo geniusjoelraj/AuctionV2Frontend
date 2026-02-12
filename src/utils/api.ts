@@ -315,7 +315,10 @@ export const LockInSelection = async (gameId: number, teamName: string, substitu
 
 export const EndGameAndFinalize = async (gameId: number): Promise<TeamResult[]> => {
   try {
-    const response = await fetch(`${BASE_URL}/game/${gameId}/end`);
+    const response = await fetch(`${BASE_URL}/game/${gameId}/end`,
+      {
+        method: 'POST'
+      });
     if (!response.ok) {
       toast.error(`Error ending game: ${response.statusText}`);
     }
@@ -331,7 +334,8 @@ export const getResults = async (gameId: number): Promise<TeamResult[]> => {
   try {
     const response = await fetch(`${BASE_URL}/game/${gameId}/results`);
     if (!response.ok) {
-      toast.error(response.statusText);
+      const data = EndGameAndFinalize(gameId)
+      return data
     }
     const data: TeamResult[] = await response.json();
     console.log(data);

@@ -93,7 +93,7 @@ export default function GameCreate() {
         playersPerTeam: parseInt(playerLimits.total) | 12,
         batsmenPerTeam: parseInt(playerLimits.batsmen) | 4,
         bowlersPerTeam: parseInt(playerLimits.bowler) | 4,
-        allRounderPerTeam: parseInt(playerLimits.allrounder) | 2,
+        allRounderPerTeam: parseInt(playerLimits.allrounder) | 3,
         wicketKeeperPerTeam: parseInt(playerLimits.keeper) | 1,
         specialPlayersPerTeam: parseInt(playerLimits.special) | 3,
         substitutesPerTeam: parseInt(playerLimits.substitute) | 3,
