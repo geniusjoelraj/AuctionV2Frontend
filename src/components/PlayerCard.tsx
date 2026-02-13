@@ -9,8 +9,6 @@ import { formatNumber } from "@/utils/bid";
 import { Download } from "lucide-react";
 import Image from "next/image";
 
-const proxyUrl = (url: string) => `/api/image-proxy?url=${encodeURIComponent(url)}`;
-
 export default function PlayerCard({ player, downloadable }: { player: Player | "EMPTY", downloadable: boolean }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const nameRef = useRef<HTMLParagraphElement>(null);

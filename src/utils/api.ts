@@ -1,6 +1,5 @@
-import { Game, NewGame, Player, TeamDetails, TeamResult, Transaction } from '@/types/api'
+import { Game, NewGame, Player, TeamDetails, TeamResult, TeamSelection, Transaction } from '@/types/api'
 import { toast } from 'react-toastify';
-import { teams } from './constants';
 
 const HOST = process.env.NEXT_PUBLIC_HOST || "auc-api.geniuspace.in"
 const BASE_URL = `https://${HOST}`;
@@ -315,7 +314,10 @@ export const LockInSelection = async (gameId: number, teamName: string, substitu
 
 export const EndGameAndFinalize = async (gameId: number): Promise<TeamResult[]> => {
   try {
-    const response = await fetch(`${BASE_URL}/game/${gameId}/end`);
+    const response = await fetch(`${BASE_URL}/game/${gameId}/end`,
+      {
+        method: 'POST'
+      });
     if (!response.ok) {
       toast.error(`Error ending game: ${response.statusText}`);
     }
@@ -331,7 +333,8 @@ export const getResults = async (gameId: number): Promise<TeamResult[]> => {
   try {
     const response = await fetch(`${BASE_URL}/game/${gameId}/results`);
     if (!response.ok) {
-      toast.error(response.statusText);
+      const data = EndGameAndFinalize(gameId)
+      return data
     }
     const data: TeamResult[] = await response.json();
     console.log(data);
@@ -343,3 +346,44 @@ export const getResults = async (gameId: number): Promise<TeamResult[]> => {
   }
 };
 
+export const fetchSelection = async (gameId: number, teamName: string): Promise<TeamSelection> => {
+  try {
+    const response = await fetch(`${BASE_URL}/game/${gameId}/selection/${teamName}`);
+    if (!response.ok) {
+      throw new Error(`Error fetching players: ${response.statusText}`);
+    }
+    const data: TeamSelection = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch players:", error);
+    throw error;
+  }
+};
+
+
+export const Authenticate = async (gameId: number, teamName: string, password: string) => {
+  try {
+    const response = await fetch(`${BASE_URL}/auth`, {
+      method: 'POST',
+      body: JSON.stringify({
+        username: teamName,
+        password: password,
+        gameId: gameId
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    if (response.ok) {
+      const res = await response.json()
+      return true
+    } else {
+      const errorData = await response.json();
+      toast.error(errorData.message)
+      return false
+    }
+  } catch (err) {
+    console.log("Failed to lockin selection", err);
+  }
+
+}

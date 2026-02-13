@@ -14,7 +14,7 @@ import { teams } from '@/utils/constants'
 import { useRouter } from 'next/navigation'
 import { toast, ToastContainer } from 'react-toastify'
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
-import { getGames } from '@/utils/api'
+import { Authenticate, getGames } from '@/utils/api'
 import { Game } from '@/types/api'
 
 const LoginForm = ({ isAdmin }: { isAdmin: boolean }) => {
@@ -54,40 +54,28 @@ const LoginForm = ({ isAdmin }: { isAdmin: boolean }) => {
     router: AppRouterInstance,
     gameId: string
   ): Promise<boolean> {
-    if (username === 'admin') {
-      if (password !== 'password') {
-        toast.error('Incorrect password')
-        return false
-      }
-      const valid = await gameExists(gameId)
-      if (!valid) return false
-      return true
-    }
-
-    if (username === 'host') {
-      if (password !== 'gta6') {
-        toast.error('Incorrect password')
-        return false
-      } else if (!await gameExists(gameId)) {
-        localStorage.setItem('teamName', selectedTeam)
-        router.push('/create')
-      }
-      const valid = await gameExists(gameId)
-      if (!valid) return false
-      return true
-    }
-
-    if (!teams.includes(username)) {
+    if (username !== 'host' && username !== 'admin' && !teams.includes(username)) {
       toast.error('Enter a proper team name')
       return false
     }
-    if (password !== '1234') {
-      toast.error('Incorrect password')
+
+    if (username === 'host' && password === 'gta6') {
+      localStorage.setItem('teamName', selectedTeam)
+      router.push('/create')
+    }
+    const isCorrect = await Authenticate(parseInt(gameId), username, password)
+    if (!isCorrect) {
       return false
     }
 
     const valid = await gameExists(gameId)
-    if (!valid) return false
+    if (!valid) {
+      if (username === 'host' && password === 'gta6') {
+        localStorage.setItem('teamName', selectedTeam)
+        router.push('/create')
+      }
+      return false
+    }
 
     return true
   }

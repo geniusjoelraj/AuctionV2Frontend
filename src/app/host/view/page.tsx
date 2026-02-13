@@ -96,6 +96,7 @@ export default function PlayerGallery() {
   const handleFilterChange = (val: string) => {
     setFilter(val as PlayerType);
     setCurrentIndex(getIndexByFilter(val));
+    socketService.publish("/app/game/1/bids", { currentBid: currentBid });
   };
 
   const next = () => {
@@ -105,6 +106,7 @@ export default function PlayerGallery() {
         [filterToKey[filter]]: prev[filterToKey[filter]] + 1,
       }));
       setCurrentIndex((prev) => (prev + 1));
+      socketService.publish("/app/game/1/bids", { currentBid: currentBid });
     }
   };
 
@@ -115,6 +117,7 @@ export default function PlayerGallery() {
         [filterToKey[filter]]: prev[filterToKey[filter]] - 1,
       }));
       setCurrentIndex((prev) => (prev - 1));
+      socketService.publish("/app/game/1/bids", { currentBid: currentBid });
     }
   };
 

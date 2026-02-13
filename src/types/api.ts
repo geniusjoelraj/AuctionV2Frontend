@@ -94,13 +94,17 @@ export type NewGame = {
   "foreignPlayersPerTeam": number;
   "maxForeignAllowed": number;
   "unCappedPerTeam": number;
+  "hostPassword": string;
+  "adminPassword": string;
 }
 
 export type Game = NewGame &
 {
   "status": "ACTIVE" | "INACTIVE" | "FINALIZED" | "ENDED",
-  id: number
+  id: number,
+  teamPasswords: { association: string, password: string }[]
 }
+
 
 export type DataTableType = {
   players: Transaction[];
@@ -141,3 +145,17 @@ export type TeamResult = {
   substitutes: string[]; // or Player[] if you have a Player type
   isQualified: boolean;
 };
+
+export type PlayerSelection = {
+  name: string;
+  boughtFor: number;
+  type: PlayerType;
+}
+
+export type TeamSelection = {
+  place: null | number;
+  teamStats: TeamDetails;
+  finalTeam: PlayerSelection[];
+  substitutes: PlayerSelection[];
+  isQualified: boolean;
+}

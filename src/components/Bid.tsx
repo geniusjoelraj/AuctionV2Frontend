@@ -17,7 +17,6 @@ export default function Bid({
       console.warn('Cannot send bid: Not connected');
       return;
     }
-
     socketService.publish("/app/game/1/bids", { currentBid: bid });
     setCurrentBid(bid);
   }, [setCurrentBid]);
@@ -53,8 +52,8 @@ export default function Bid({
     };
   }, []);
   // Hotkeys
-  useHotkeys('up', () => handleSendBid(currentBid + bidInc), [currentBid, handleSendBid]);
-  useHotkeys('down', () => handleSendBid(currentBid - bidInc), [currentBid, handleSendBid]);
+  useHotkeys('up', () => handleSendBid(currentBid + bidInc), [currentBid, handleSendBid, bidInc]);
+  useHotkeys('down', () => handleSendBid(currentBid - bidInc), [currentBid, handleSendBid, bidInc]);
 
   return (
     <div className="flex flex-col items-center w-72 justify-center">

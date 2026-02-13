@@ -38,7 +38,7 @@ export default function page() {
   }
   const handleEndGame = () => {
     if (game) {
-      EndGameAndFinalize(game!).then((data) => {
+      getResults(game!).then((data) => {
         if (data.length > 0) {
           setReults(data)
         }
