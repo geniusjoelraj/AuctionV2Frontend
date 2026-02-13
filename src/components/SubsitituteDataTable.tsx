@@ -17,10 +17,10 @@ import {
 } from "@/components/ui/table"
 import React, { useEffect, useState } from "react"
 import { formatNumber, substituteCheck } from "@/utils/bid"
-import { Transaction } from "@/types/api"
+import { PlayerSelection, TeamSelection, Transaction } from "@/types/api"
 import { Button } from "./ui/button"
 import { toast, ToastContainer } from "react-toastify"
-import { finalizeGame, getLockedIn, LockInSelection } from "@/utils/api"
+import { fetchSelection, finalizeGame, getLockedIn, LockInSelection } from "@/utils/api"
 import Image from "next/image"
 
 interface DataTableProps<TData, TValue> {
@@ -52,19 +52,25 @@ export function SubstituteDataTable<TData extends Transaction, TValue>({
   const allPlayers: Transaction[] = table.getRowModel().rows.map(row => row.original);
   const selectedRowsData: Transaction[] = table.getFilteredSelectedRowModel().rows.map(row => row.original);
   const [teamPlayers, setTeamPlayers] = useState<Transaction[]>()
-  const [keepers, setKeepers] = useState<Transaction[]>()
-  const [batsmen, setBatsmen] = useState<Transaction[]>()
-  const [bowlers, setBowlers] = useState<Transaction[]>()
-  const [allRounders, setALlRounders] = useState<Transaction[]>()
+  const [keepers, setKeepers] = useState<PlayerSelection[]>()
+  const [batsmen, setBatsmen] = useState<PlayerSelection[]>()
+  const [bowlers, setBowlers] = useState<PlayerSelection[]>()
+  const [allRounders, setALlRounders] = useState<PlayerSelection[]>()
   const [lockedIn, setLockedIn] = useState(false)
+  const [finalTeam, setFinalTeam] = useState<TeamSelection>()
   const finalizeTeam = () => {
     const teamP: Transaction[] = allPlayers.filter((player) => !selectedRowsData.includes(player))
     const subs = allPlayers.filter((player) => selectedRowsData.includes(player)).map((player) => player.playerId)
     LockInSelection(gameId!, teamName, subs)
-    const keep = teamP?.filter((player) => player.playerType === 'WICKET_KEEPER')
-    const bats = teamP?.filter((player) => player.playerType === 'BATSMAN')
-    const bowls = teamP?.filter((player) => player.playerType === 'BOWLER')
-    const all = teamP?.filter((player) => player.playerType === 'ALL_ROUNDER')
+    const game = parseInt(localStorage.getItem('game')!)
+    const team = localStorage.getItem('teamName')
+    fetchSelection(game, team!).then((data) => {
+      setFinalTeam(data)
+    })
+    const keep = finalTeam?.finalTeam.filter((player) => player.type === 'WICKET_KEEPER')
+    const bats = finalTeam?.finalTeam.filter((player) => player.type === 'BATSMAN')
+    const bowls = finalTeam?.finalTeam.filter((player) => player.type === 'BOWLER')
+    const all = finalTeam?.finalTeam.filter((player) => player.type === 'ALL_ROUNDER')
     setKeepers(keep)
     setBatsmen(bats)
     setBowlers(bowls)
@@ -81,9 +87,20 @@ export function SubstituteDataTable<TData extends Transaction, TValue>({
 
   useEffect(() => {
     const game = parseInt(localStorage.getItem('game')!)
+    const team = localStorage.getItem('teamName')
     getLockedIn(game).then((data) => {
-      const team = localStorage.getItem('teamName')
       setLockedIn(data?.lockedInTeams?.includes(team))
+    })
+    fetchSelection(game, team!).then((data) => {
+      const keep = data?.finalTeam.filter((player) => player.type === 'WICKET_KEEPER')
+      const bats = data?.finalTeam.filter((player) => player.type === 'BATSMAN')
+      const bowls = data?.finalTeam.filter((player) => player.type === 'BOWLER')
+      const all = data?.finalTeam.filter((player) => player.type === 'ALL_ROUNDER')
+      setFinalTeam(data)
+      setKeepers(keep)
+      setBatsmen(bats)
+      setBowlers(bowls)
+      setALlRounders(all)
     })
   }, [])
 
@@ -95,9 +112,9 @@ export function SubstituteDataTable<TData extends Transaction, TValue>({
   }
   return (
     <>
-      {teamFinal && lockedIn ?
+      {teamFinal || lockedIn ?
         <div className="h-screen w-screen absolute bg-[url(/field.png)] bg-center bg-cover md:bg-contain bg-no-repeat bg-black top-0 left-0 flex items-center flex-col gap-5 p-4 justify-center text-sm font-semibold">
-          <p className="text-2xl">Total Points: {teamPlayers?.reduce((acc, p) => acc + p.points, 0)}</p>
+          <p className="text-2xl">Total Points: {finalTeam?.teamStats.points}</p>
           <div className="flex flex-col items-center">
             WICKET KEEPERS
             <div className="flex gap-2">

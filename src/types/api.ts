@@ -145,3 +145,17 @@ export type TeamResult = {
   substitutes: string[]; // or Player[] if you have a Player type
   isQualified: boolean;
 };
+
+export type PlayerSelection = {
+  name: string;
+  boughtFor: number;
+  type: PlayerType;
+}
+
+export type TeamSelection = {
+  place: null | number;
+  teamStats: TeamDetails;
+  finalTeam: PlayerSelection[];
+  substitutes: PlayerSelection[];
+  isQualified: boolean;
+}

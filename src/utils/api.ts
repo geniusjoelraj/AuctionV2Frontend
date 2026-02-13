@@ -1,4 +1,4 @@
-import { Game, NewGame, Player, TeamDetails, TeamResult, Transaction } from '@/types/api'
+import { Game, NewGame, Player, TeamDetails, TeamResult, TeamSelection, Transaction } from '@/types/api'
 import { toast } from 'react-toastify';
 
 const HOST = process.env.NEXT_PUBLIC_HOST || "localhost"
@@ -346,13 +346,13 @@ export const getResults = async (gameId: number): Promise<TeamResult[]> => {
   }
 };
 
-export const fetchSelection = async (gameId: number, teamName: string): Promise<Player[]> => {
+export const fetchSelection = async (gameId: number, teamName: string): Promise<TeamSelection> => {
   try {
-    const response = await fetch(`${BASE_URL}/game/${gameId}/selection/{${teamName}`);
+    const response = await fetch(`${BASE_URL}/game/${gameId}/selection/${teamName}`);
     if (!response.ok) {
       throw new Error(`Error fetching players: ${response.statusText}`);
     }
-    const data: any[] = await response.json();
+    const data: TeamSelection = await response.json();
     return data;
   } catch (error) {
     console.error("Failed to fetch players:", error);

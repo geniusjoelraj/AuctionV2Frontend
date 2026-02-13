@@ -54,38 +54,28 @@ const LoginForm = ({ isAdmin }: { isAdmin: boolean }) => {
     router: AppRouterInstance,
     gameId: string
   ): Promise<boolean> {
-    const isCorrect = await Authenticate(parseInt(gameId), username, password)
-    if (username === 'admin') {
-      if (!isCorrect) {
-        return false
-      }
-      const valid = await gameExists(gameId)
-      if (!valid) return false
-      return true
-    }
-
-    if (username === 'host') {
-      if (!isCorrect) {
-        return false
-      } else if (!await gameExists(gameId)) {
-        localStorage.setItem('teamName', selectedTeam)
-        router.push('/create')
-      }
-      const valid = await gameExists(gameId)
-      if (!valid) return false
-      return true
-    }
-
-    if (!teams.includes(username)) {
+    if (username !== 'host' && username !== 'admin' && !teams.includes(username)) {
       toast.error('Enter a proper team name')
       return false
     }
+
+    if (username === 'host' && password === 'gta6') {
+      localStorage.setItem('teamName', selectedTeam)
+      router.push('/create')
+    }
+    const isCorrect = await Authenticate(parseInt(gameId), username, password)
     if (!isCorrect) {
       return false
     }
 
     const valid = await gameExists(gameId)
-    if (!valid) return false
+    if (!valid) {
+      if (username === 'host' && password === 'gta6') {
+        localStorage.setItem('teamName', selectedTeam)
+        router.push('/create')
+      }
+      return false
+    }
 
     return true
   }
