@@ -90,17 +90,19 @@ export function SubstituteDataTable<TData extends Transaction, TValue>({
     const team = localStorage.getItem('teamName')
     getLockedIn(game).then((data) => {
       setLockedIn(data?.lockedInTeams?.includes(team))
-    })
-    fetchSelection(game, team!).then((data) => {
-      const keep = data?.finalTeam.filter((player) => player.type === 'WICKET_KEEPER')
-      const bats = data?.finalTeam.filter((player) => player.type === 'BATSMAN')
-      const bowls = data?.finalTeam.filter((player) => player.type === 'BOWLER')
-      const all = data?.finalTeam.filter((player) => player.type === 'ALL_ROUNDER')
-      setFinalTeam(data)
-      setKeepers(keep)
-      setBatsmen(bats)
-      setBowlers(bowls)
-      setALlRounders(all)
+      if (data?.lockedInTeams?.includes(team)) {
+        fetchSelection(game, team!).then((data) => {
+          const keep = data?.finalTeam.filter((player) => player.type === 'WICKET_KEEPER')
+          const bats = data?.finalTeam.filter((player) => player.type === 'BATSMAN')
+          const bowls = data?.finalTeam.filter((player) => player.type === 'BOWLER')
+          const all = data?.finalTeam.filter((player) => player.type === 'ALL_ROUNDER')
+          setFinalTeam(data)
+          setKeepers(keep)
+          setBatsmen(bats)
+          setBowlers(bowls)
+          setALlRounders(all)
+        })
+      }
     })
   }, [])
 

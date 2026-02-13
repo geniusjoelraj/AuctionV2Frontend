@@ -14,7 +14,7 @@ import { useEffect, useState, useCallback, useRef } from "react"
 import { socketService } from "@/socket"
 import { formatNumber } from "@/utils/bid"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion"
-import { getGame } from "@/utils/api"
+import { getGame, getLockedIn } from "@/utils/api"
 import { Button } from "./ui/button"
 import SetSubstitute from "./SetSubstitute"
 import { FiDownload } from 'react-icons/fi'
@@ -96,6 +96,10 @@ export function DataTable({ players, teamDetails, teamName }: { players: Array<T
 
     const gameId = localStorage.getItem('game')
     if (!gameId) return
+    const team = localStorage.getItem('teamName')
+    getLockedIn(parseInt(gameId)).then((data) => {
+      setSetTeam(data?.lockedInTeams?.includes(team))
+    })
 
     const gameIdNum = parseInt(gameId)
 
