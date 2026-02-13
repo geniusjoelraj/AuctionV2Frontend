@@ -1,7 +1,7 @@
 'use client'
 
 import { Game, NewGame } from "@/types/api"
-import { createGame, getGames, startGame } from "@/utils/api"
+import { createGame, getGame, getGames, startGame } from "@/utils/api"
 import { Button, Input } from "@base-ui/react"
 import { Label } from "@radix-ui/react-label"
 import { useRouter } from "next/navigation"
@@ -22,6 +22,7 @@ export default function GameCreate() {
   const [gameName, setGameName] = useState<string>('')
   const [gamesList, setGamesList] = useState<Game[]>()
   const router = useRouter()
+  const [curGame, setCurGame] = useState<Game>()
   const [playerLimits, setPlayerLimits] = useState({
     total: ',',
     batsmen: '',
@@ -35,6 +36,12 @@ export default function GameCreate() {
     foreign: ''
   })
   const [trigger, setTrigger] = useState(false)
+
+  useEffect(() => {
+    getGame(parseInt(gameId)).then((data) => {
+      setCurGame(data)
+    })
+  }, [gameId])
 
   const [isJoin, setIsJoin] = useState<boolean>(true)
   const handleCreateGame = async (e: React.FormEvent) => {
@@ -52,7 +59,9 @@ export default function GameCreate() {
       substitutesPerTeam: parseInt(playerLimits.substitute),
       foreignPlayersPerTeam: parseInt(playerLimits.foreign),
       legendsPerTeam: parseInt(playerLimits.legends),
-      unCappedPerTeam: parseInt(playerLimits.uncapped)
+      unCappedPerTeam: parseInt(playerLimits.uncapped),
+      adminPassword: "password",
+      hostPassword: 'gta6'
     }
     createGame(newGame)
   }
@@ -100,7 +109,10 @@ export default function GameCreate() {
         foreignPlayersPerTeam: parseInt(playerLimits.foreign) | 3,
         maxForeignAllowed: parseInt(playerLimits.foreign) | 5,
         legendsPerTeam: parseInt(playerLimits.legends) | 2,
-        unCappedPerTeam: parseInt(playerLimits.uncapped) | 2
+        unCappedPerTeam: parseInt(playerLimits.uncapped) | 2,
+        adminPassword: "password",
+        hostPassword: 'gta6'
+
       }
       createGame(newGame)
     }
@@ -157,6 +169,24 @@ export default function GameCreate() {
                   <TableCell>{game.status}</TableCell>
                 </TableRow>
               ))}
+            </TableBody>
+          </Table>
+
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Team</TableHead>
+                <TableHead>Password</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {curGame?.teamPasswords?.map((team, ind) => (
+                <TableRow key={ind}>
+                  <TableCell>{team.association}</TableCell>
+                  <TableCell>{team.password}</TableCell>
+                </TableRow>
+              ))
+              }
             </TableBody>
           </Table>
         </div>

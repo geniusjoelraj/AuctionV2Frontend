@@ -94,13 +94,17 @@ export type NewGame = {
   "foreignPlayersPerTeam": number;
   "maxForeignAllowed": number;
   "unCappedPerTeam": number;
+  "hostPassword": string;
+  "adminPassword": string;
 }
 
 export type Game = NewGame &
 {
   "status": "ACTIVE" | "INACTIVE" | "FINALIZED" | "ENDED",
-  id: number
+  id: number,
+  teamPasswords: { association: string, password: string }[]
 }
+
 
 export type DataTableType = {
   players: Transaction[];
