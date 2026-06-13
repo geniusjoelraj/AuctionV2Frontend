@@ -6,6 +6,24 @@ A real-time IPL-style cricket auction simulator built with **Next.js 16**, **Rea
 
 ---
 
+## 📸 Screenshots
+
+> Place your screenshots in the `docs/screenshots/` directory and update the paths below.
+
+| Screen | Preview |
+|---|---|
+| **Login** | ![Login](docs/screenshots/login.png) |
+| **Host — Auction View** | ![Host Auction](docs/screenshots/host-auction.png) |
+| **Host — Player Card** | ![Player Card](docs/screenshots/player-card.png) |
+| **Host — Legend Card** | ![Legend Card](docs/screenshots/legend-card.png) |
+| **Admin — Controls** | ![Admin Controls](docs/screenshots/admin-controls.png) |
+| **Admin — Data Table** | ![Admin Data Table](docs/screenshots/admin-datatable.png) |
+| **Team — Dashboard** | ![Team Dashboard](docs/screenshots/team-dashboard.png) |
+| **Game Creation** | ![Game Creation](docs/screenshots/game-create.png) |
+| **End Results** | ![End Results](docs/screenshots/end-results.png) |
+
+---
+
 ## ✨ Features
 
 - **Real-time bidding** — WebSocket (STOMP/SockJS) powered live bid updates across all connected clients
