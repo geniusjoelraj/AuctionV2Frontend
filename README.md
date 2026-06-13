@@ -39,6 +39,17 @@ A real-time IPL-style cricket auction simulator built with **Next.js 16**, **Rea
 
 ---
 
+## 🖼️ Screenshots
+
+<img width="903" height="1030" alt="Screenshot 2026-06-13 at 6 54 21 PM" src="https://github.com/user-attachments/assets/6c5f8403-3f0a-457f-9bbb-1f11616a1a48" />
+<img width="1470" height="919" alt="Screenshot 2026-06-13 at 7 08 41 PM" src="https://github.com/user-attachments/assets/8f02a730-10ab-44ea-bf79-7ec1a108e4da" />
+<img width="5312" height="3022" alt="Screenshot 2026-06-13 at 7 15 22 PM" src="https://github.com/user-attachments/assets/8afaeb5b-aa88-4ad7-80f0-475e5a74ec24" />
+<img width="1470" height="919" alt="Screenshot 2026-06-13 at 7 05 00 PM" src="https://github.com/user-attachments/assets/22d9906d-de1a-47fe-8240-143153ce7db6" />
+<img width="712" height="1600" alt="WhatsApp Image 2026-06-13 at 9 24 05 PM" src="https://github.com/user-attachments/assets/00aca193-5bf5-40a9-9b34-b5c853e3a32b" />
+<img width="712" height="1600" alt="WhatsApp Image 2026-06-13 at 9 24 05 PM (1)" src="https://github.com/user-attachments/assets/c386fae7-7f7d-47b0-b286-b117c7d4e709" />
+
+
+
 ## 🛠 Tech Stack
 
 | Layer | Technology |
